@@ -1,0 +1,29 @@
+name: Question template
+description: If anyone in the team has a question about the project?
+title: ':grey_question: '
+labels: ['question']
+assignees: []
+projects: ['Techlabs-do/45']
+
+body:
+  - type: markdown
+    attributes:
+      value: 'Thank you for taking the time to ask a question about the project. Please fill out the following form to help us understand your inquiry.'
+
+  - type: textarea
+    id: what-is-your-question
+    attributes:
+      label: What is your question?
+      description: Write down the question that you have.
+      placeholder: What would you like to know?
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional-information
+    attributes:
+      label: Additional information
+      description: Additional information that you would like to provide about the questions.
+      placeholder: Any extra context or information.
+    validations:
+      required: false

@@ -1,0 +1,109 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Users {
+  id           String   @id @default(cuid())
+  auth_id      String   @unique()
+  created_at   DateTime @default(now())
+  updated_at   DateTime @default(now())
+}
+
+model calls {
+  calldate           DateTime? @db.Date
+  callprice          Float?
+  callid             Int       @id(map: "pk_calls")
+  calltypecode       Int?
+  notificationperiod Int?
+  callpricetypecode  Int?
+  securityid         Int?
+}
+
+model puts {
+  securityid       Int?
+  putid            Int       @id(map: "pk_puts")
+  putdate          DateTime? @db.Date
+  putprice         Float?
+  puttypecode      Int?
+  putpricetypecode Int?
+}
+
+enum SecurityType {
+  STOCK
+  BOND
+  ETF
+  MUTUAL_FUND
+}
+
+enum ExcludeHolidays {
+  YES
+  NO
+}
+
+model Trade {
+  id                 String        @id @default(uuid())
+  securityType       SecurityType
+  securityId         String
+  securityDescription String?      // Optional
+  issuer             String?       // Optional
+  coupon             Float?        // Added from UI image
+  maturityDate       DateTime
+  settleDate         DateTime
+  datedDate          DateTime?     // Added from UI image
+  firstCouponDate    DateTime?     // Added from UI image
+  par                Float?        // Optional
+  price              Float?        // Optional
+  yield              Float?        // Optional
+  excludeHolidays    ExcludeHolidays? // Optional
+  afterTaxCalls      Boolean?      // Optional
+  
+  // New fields from New Input Screen
+  sector             String?
+  couponFrom         Float?
+  couponTo           Float?
+  maturityFrom       DateTime?
+  maturityTo         DateTime?
+  enterYieldCurve    Boolean?      @default(false)
+  forecastDate       DateTime?
+  useCurve           Boolean?      @default(false)
+  enterFixingCurve   Boolean?      @default(false)
+  state              String?
+  stateRate          Float?
+  fedRate            Float?
+
+  addOns             AddOns?       @relation(fields: [addOnsId], references: [id])
+  addOnsId           String?       // Foreign key for AddOns
+
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @updatedAt
+
+  @@map("trade_group")
+  @@index([securityType])
+  @@index([securityId])
+}
+
+model AddOns {
+  id        String   @id @default(uuid())
+  sinks     Sink[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  Trade Trade[]
+}
+
+model Sink {
+  id         String   @id @default(uuid())
+  sinkDate   DateTime
+  sinkAmount Float?   // Optional
+  sinkPrice  Float?   // Optional
+  totalRow   Float?   // Optional
+  addOns     AddOns   @relation(fields: [addOnsId], references: [id], onDelete: Cascade)
+  addOnsId   String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}

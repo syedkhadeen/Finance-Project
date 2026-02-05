@@ -1,0 +1,59 @@
+version: '3.9'
+
+services:
+  # certbot:
+  #   image: certbot/certbot:latest
+  #   volumes:
+  #     - ./certbot/www/:/var/www/certbot/:rw
+  #     - ./certbot/conf/:/etc/letsencrypt/:rw
+
+  ng-proxy:
+    container_name: proxy
+    image: nginx:alpine
+    ports:
+      - 80:80
+      # - 443:443
+    volumes:
+      - ./nginx2.conf:/etc/nginx/nginx.conf
+    restart: 'always'
+    networks:
+      - backend
+    depends_on:
+      - seekinvest_prod
+      - seekinvest_dev
+
+  seekinvest_prod:
+    container_name: seekinvest_prod
+    build:
+      context: ./
+      dockerfile: Dockerfile.production
+    ports:
+      - '3000:3000'
+    volumes:
+      - ./:/app
+      - /app/node_modules
+    restart: 'unless-stopped'
+    networks:
+      - backend
+
+  seekinvest_dev:
+    container_name: seekinvest_dev
+    build:
+      context: ./
+      dockerfile: Dockerfile.dev
+    ports:
+      - '4000:3000'
+    volumes:
+      - ./:/app
+      - /app/node_modules
+    restart: 'unless-stopped'
+    networks:
+      - backend
+
+networks:
+  backend:
+    driver: bridge
+
+volumes:
+  data:
+    driver: local

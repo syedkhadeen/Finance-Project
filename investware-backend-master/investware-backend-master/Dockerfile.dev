@@ -1,0 +1,23 @@
+# NodeJS Version 20
+FROM node:20-bullseye-slim
+
+# Copy package.json
+COPY ./package.json ./app/
+
+# Work to Dir
+WORKDIR /app
+
+# install packages
+RUN yarn install
+
+# move all files
+COPY . .
+RUN yarn prisma:generate:dev
+
+# Set Env
+ENV NODE_ENV development
+
+EXPOSE 3000
+
+# Cmd script
+CMD ["npm", "run", "start:dev"]

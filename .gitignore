@@ -1,0 +1,20 @@
+# Temporary files
+*.log
+*.tmp
+temp_*
+input.json
+output.json
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Test files
+test-*.js
+test-*.bat

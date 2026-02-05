@@ -1,0 +1,169 @@
+
+public class AtMaturity {
+    Bond bond;
+    CalcResults calcResults;
+    DayCount dayCount;
+
+    AtMaturity(Bond bond, CalcResults calcResults) {
+        this.bond = bond;
+        this.calcResults = calcResults;
+        dayCount = new DayCount(bond.error, bond.dtMaturity);
+    }
+
+
+    public double accruedInterest(int calcNo, Dates dtSettle) {
+        double accInt = 0.0;
+        int dis = bond.dayCount.getDaycount(bond.dtDated, dtSettle, bond.dtMaturity, bond.dcAccruedInt);
+        int diy = dayCount.getDaysInYear(bond.dcAccruedInt, bond.dtDated, bond.dtMaturity, 1);
+        accInt = bond.faceAmt * bond.cpnRt * (double) dis / diy;
+        return accInt;
+    }
+
+    public double interestIncome(int calcNo, Dates dtFrom, Dates dtTo) {
+        double intInc = 0.0;
+        intInc = bond.faceAmt * getInterestIncome(calcNo, dtFrom, dtTo);
+        return intInc;
+    }
+
+    public double getInterestIncome(int calcNo, Dates dtFrom, Dates dtTo) {
+        double inc = 0.;
+        int dFrom = bond.dayCount.getDaycount(bond.dtDated, dtFrom, bond.dtMaturity, bond.dcAccruedInt);
+        int dTo = bond.dayCount.getDaycount(bond.dtDated, dtTo, bond.dtMaturity, bond.dcAccruedInt);
+        int diy = dayCount.getDaysInYear(bond.dcAccruedInt, bond.dtDated, bond.dtMaturity, 1);
+        inc = bond.cpnRt * (dTo - dFrom) / (double) diy;
+        return inc;
+    }
+
+    public double matureLengthYears(int calcNo, Dates dtSettle) {
+        double matLen = 0;
+        int days = dayCount.getDaycount(dtSettle, bond.dtMaturity, bond.dtMaturity, DayCount.DCMethod.DC_ACT);
+        double years = bond.time.daysToYears(days, dtSettle, CalcList.MATLENYEARS);
+        return years;
+    }
+
+    public double matureLengthDays(int calcNo, Dates dtSettle) {
+        double matLen = 0;
+        double days = dayCount.getDaycount(dtSettle, bond.dtMaturity, bond.dtMaturity, DayCount.DCMethod.DC_ACT);
+        return days;
+    }
+
+    public double macDuration(int calcNo, Dates dtSettle, Dates dtRedeem) {
+        int matDays = dayCount.getDaycount(dtSettle, dtRedeem, bond.dtMaturity, DayCount.DCMethod.DC_ACT);
+        double years = bond.time.daysToYears(matDays, dtSettle, CalUnits.calcYearPrecise);
+        return years;
+    }
+
+    public double priceYield(int calcNo, Dates dtSettle, double yield, Dates dtRedeem) {
+        double price = 0., accInt = 0.;
+        double dds = dayCount.getDaycount(bond.dtDated, dtSettle, bond.dtMaturity, bond.dcAccruedInt);
+        double diy = dayCount.getDaysInYear(bond.dcAccruedInt, dtSettle, dtRedeem, 1);
+        double dsm = dayCount.getDaycount(bond.dtDated, bond.dtRedeem, bond.dtMaturity, bond.dcAccruedInt);
+        double matCash = bond.redeemPrin + bond.cpnRt * dsm / diy;
+        if (bond.cleanPrcYn == 'Y')
+            accInt = bond.cpnRt * dds / diy;
+        double yieldFac = (1. + yield * dsm / diy);
+        price = (matCash / yieldFac) - accInt;
+        return price;
+    }
+
+    public double yieldPrice(int calcNo, Dates dtSettle, double price) {
+        double yield = 0., accInt = 0.;
+
+        double diy = dayCount.getDaysInYear(bond.dcAccruedInt, bond.dtDated, bond.dtMaturity, 1);
+        double dsm = dayCount.getDaycount(dtSettle, bond.dtRedeem, bond.dtMaturity, bond.dcAccruedInt);
+        double dim = dayCount.getDaycount(bond.dtDated, bond.dtRedeem, bond.dtMaturity, bond.dcAccruedInt);
+        double matCash = bond.redeemPrin + bond.cpnRt * dim / diy;
+        double dis = dayCount.getDaycount(bond.dtDated, dtSettle, bond.dtMaturity, bond.dcAccruedInt);
+        if (bond.cleanPrcYn == 'Y')
+            accInt = bond.cpnRt * dis / dim;
+        double netPay = price + accInt;
+        if (dsm == 0.)
+            return 0.;
+        yield = (-1 + matCash / netPay) * (diy / dsm);
+        return yield;
+    }
+
+
+    public double modDurationSIA(int calcNo, Dates dtSettle, Dates dtRedeem) {
+        int matDays = dayCount.getDaycount(dtSettle, dtRedeem, bond.dtMaturity, DayCount.DCMethod.DC_ACT);
+        double years = bond.time.daysToYears(matDays, dtSettle, CalUnits.calcYearPrecise);
+        return years;
+    }
+
+    public double modDurationStd(int calcNo, Dates dtSettle, double yield, Dates dtRedeem) {
+        double prcUp, prcDn, prc, yldShift = .5 * CalUnits.durationYieldShift;
+        prc = priceYield(calcNo, dtSettle, yield, dtRedeem);
+        prcDn = priceYield(calcNo, dtSettle, yield + yldShift, dtRedeem);
+        prcUp = priceYield(calcNo, dtSettle, yield - yldShift, dtRedeem);
+        double modDur = (prcDn - prcUp) / prc;
+        return modDur;
+    }
+
+    public double conVexity(int calcNo, Dates dtSettle, double yield, Dates dtRedeem, double redeemInt, double redeemPrin) {
+        double cvex = 0., yldShift = CalUnits.durationYieldShift;
+        double prcUp, prcDn, prc;
+        prc = priceYield(calcNo, dtSettle, yield, dtRedeem);
+        prcDn = priceYield(calcNo, dtSettle, yield + yldShift, dtRedeem);
+        prcUp = priceYield(calcNo, dtSettle, yield - yldShift, dtRedeem);
+        cvex = (prcDn + prcUp - 2. * prc) / (2. * prc * yldShift * yldShift);
+        return cvex; // need tp scale by 10000
+    }
+
+    public int couponDays(int calcNo, Dates dtSettle) {
+        int cpnDays = dayCount.getDaycount(bond.dtDated, dtSettle, bond.dtMaturity, bond.dcAccruedInt);
+        return cpnDays;
+    }
+
+    public int cashflow(int calcNo, int securityNo, Dates dtSettle, Dates dtRedeem, double redeemPrin) {
+        int dayNum = 0;
+        double totPrinflow = redeemPrin;
+        char isHolidayYn;
+        double perLen = bond.simplePeriodCount(dtSettle, bond.dtMaturity, CalUnits.SEMIANNUALREPEAT);
+        double years = dayCount.matLenYears(calcNo, dtSettle, bond.dtMaturity, bond.dtMaturity);
+        double schedPrinflow = bond.redeemPrin;
+        double prePayflow = 0.;
+        Dates dtLast = new Dates();
+        dtLast = dtSettle;
+        Dates dtNext = new Dates();
+        SchedTrack schedTrack = new SchedTrack();
+        double fedTaxPay = 0., stateTaxPay = 0.;
+        double intInc = 0.;
+        double matCash = 0.;
+        matCash = maturityCash(calcNo, securityNo, dtSettle, dtRedeem, redeemPrin);
+        intInc = getInterestIncome(calcNo, dtSettle, dtRedeem);
+        if (bond.afterTaxCalcsYn == 'N') {
+            // is it tax time
+            SchedTrack taxTrack = bond.schedTracks.getSchedTrackOnAfter(dtRedeem, SchedTrack.TAXPAYMENTTRACK);
+            if (taxTrack.found) {
+                fedTaxPay = -bond.taxRtFedIncome * intInc;
+                stateTaxPay = -bond.taxRtStateIncome * intInc;
+                int daysHeld = bond.dayCount.getDaycountDCACT(bond.dtPur, bond.dtMaturity);
+                if (daysHeld > 365) {
+                    fedTaxPay += (bond.redeemPrin - bond.purPrc) * bond.taxRtFedCapGainLong;
+                    stateTaxPay += (bond.redeemPrin - bond.purPrc) * bond.taxRtStateCapGainLong;
+                } else {
+                    fedTaxPay += (bond.redeemPrin - bond.purPrc) * bond.taxRtFedCapGainShort;
+                    stateTaxPay += (bond.redeemPrin - bond.purPrc) * bond.taxRtStateCapGainShort;
+                }
+
+            } else {
+                String warnMesg = "No tax dates were specified when requesting after tax cashflows";
+                bond.error.setWarning(getClass().getName(), warnMesg);
+                bond.error.clearError();
+            }
+        }
+        String dow = dayCount.getDayOfWeek(bond.dtMaturity);
+        perLen = bond.simplePeriodCount(dtSettle, dtRedeem, CalUnits.SEMIANNUALREPEAT);
+        calcResults.addCashflow(calcNo, securityNo, dtRedeem, dow, perLen, years, matCash, redeemPrin, redeemPrin, 0., intInc, fedTaxPay, stateTaxPay);
+
+        return 1;
+    }
+
+    public double maturityCash(int calcNo, int securityNo, Dates dtSettle, Dates dtRedeem, double redeemPrin) {
+        int diy = dayCount.getDaysInYear(bond.dcAccruedInt, bond.dtDated, dtRedeem, 1);
+        int dim = dayCount.getDaycount(bond.dtDated, bond.dtRedeem, dtRedeem, bond.dcAccruedInt);
+        double matCash = bond.redeemPrin + bond.cpnRt * (double) dim / diy;
+        return matCash;
+    }
+
+}

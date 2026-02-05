@@ -1,0 +1,322 @@
+
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Scanner;
+
+public class CommandLine {
+
+    // Input config
+
+    String rootDirectory;
+    Error error;
+    String useConfigYn = UnAvails.NOTAVAILSTRING;
+    String isInputJSONYn;
+    String isFileInputYn;
+    String isFileOutputYn;
+
+    String quotesIncluded = "N";
+
+    int noArgs;
+
+    String cmdStr;
+
+    String fileInputName;
+    String fileOutputName;
+
+    // Separaters
+
+    String consoleMultiPreface;
+    String consoleMultiPostFix;
+    String consoleMultiSecEnd;
+    String consoleParamDelimit;
+    String consoleLeftBracket;
+    String consoleRightBracket;
+    String consoleSecStartDelimit;
+
+    String consoleResultHeader;
+    String consoleSecEndDelimit;
+    String consoleQuote;
+    String consoleCalcDelimit;
+    String consoleStdSecStartDelimit = "New=Security";
+    String consoleStdCalcDelimit = ";";
+
+    String consolePortfolioDelimit;
+    String fileCalcDelimit;
+    String fileParamDelimit;
+    String fileSecDelimit;
+    String filePortfolioDelimit;
+    String fileOutputFormat;
+
+
+    String showRecapYn;
+    boolean showIndividualCalc;
+    boolean showPortSummary;
+
+    String recapTitle;
+
+    String recapBody;
+    ArrayList<String> userRequestList = new ArrayList<>();
+
+
+    /**
+     * documentation
+     * CommendLine checks that the command line has the no of takens, namely 5
+     * it also checks that a valid directory has been entered.
+     * then is passed along the file input name and file output name
+     * then is passed along whether the input string is json or Bp
+     * and whether the output is json of Bp
+     */
+    // JSON console output surrounded by {...}
+    // STD console output surrounded ""
+    // JSON console each portfolio stat is srruounded by {...}
+    // STD console each portfolio stat is surrounded by ""
+    // JSON entire console result surrounded by [...]
+    // STD entire console result surroounded by ""
+    // JSON portfolio delimiter is "New=PortfolioStats"
+
+    CommandLine() {
+
+    }
+
+    CommandLine(Error error) {
+        this.error = error;
+        this.useConfigYn = UnAvails.NOTAVAILSTRING;
+        this.rootDirectory = UnAvails.NOTAVAILSTRING;
+        this.isFileInputYn = UnAvails.NOTAVAILSTRING;
+        this.isInputJSONYn = UnAvails.NOTAVAILSTRING;
+        this.fileInputName = UnAvails.NOTAVAILSTRING;
+        this.isFileOutputYn = UnAvails.NOTAVAILSTRING;
+        this.fileOutputFormat = UnAvails.NOTAVAILSTRING;
+        this.fileOutputName = UnAvails.NOTAVAILSTRING;
+        error.isInputJSONYn = UnAvails.NOTAVAILSTRING;
+    }
+
+
+    public String commandLineHelp() {
+        String strHelp;
+        strHelp = "\nArgument choices:\n";
+        strHelp += "0 Arguments: Returns the application version and command line help message\n";
+        strHelp += "1 Argument: <JSON request string>\n";
+        strHelp += "2 Arguments: <Is JSON String = Y or N> | <Request String>\n";
+        strHelp += "3 Arguments: <CONVERT> | <BasisPoint Format Request File> | <JSON Format Request File\n";
+        strHelp += "3 Arguments: <Is JSON String = Y or N> | <Add quotes to request string = Y or N> | <Request Srtring>\n";
+        strHelp += "5 Arguments: <Root Directory> | <Is JSON input = Y or N> | <Request File> | <Result File> | <Result file Format>\n";
+        strHelp += "10 Arguments: <Use Configuration File = Y or N> | " +
+                "<Root Directory>| " +
+                "<Is JSON Format = Y or N> | " +
+                "<Use Request File = Y or N> | " +
+                "<Use Result File = Y or N> | " +
+                "<Request File Name> | " +
+                "<Result File Name> | " +
+                "<Result File Format = STD or CSV>| " +
+                "<Print Recap = Y pr N> |" +
+                " <Request String>\n";
+        return strHelp;
+    }
+
+
+    public String setCommandLine(String[] args) {
+        String requestAll = "No request was specified";
+        int noArgs = args.length;
+        switch (noArgs) {
+            case 0:
+                noArgs = 0;
+                String strHelp = "Version: " + BondConsts.VERSION + commandLineHelp();
+                System.out.println(strHelp);
+                System.exit(0);
+            case 1: // all JSON no use of files
+                this.noArgs = 1;
+                this.useConfigYn = "N";
+                this.rootDirectory = UnAvails.NOTAVAILSTRING;
+                this.isInputJSONYn = "Y";
+                this.isFileInputYn = "N";
+                this.isFileOutputYn = "N";
+                this.fileInputName = UnAvails.NOTAVAILSTRING;
+                this.fileOutputName = UnAvails.NOTAVAILSTRING;
+                this.fileOutputFormat = UnAvails.NOTAVAILSTRING;
+                this.showRecapYn = "N";
+                this.showIndividualCalc = true;
+                this.showPortSummary = true;
+                requestAll = args[0];
+                break;
+            case 2:
+                this.noArgs = 2;
+                this.useConfigYn = "N";
+                this.rootDirectory = UnAvails.NOTAVAILSTRING;
+                this.isInputJSONYn = args[0];
+                this.isFileInputYn = "N";
+                this.isFileOutputYn = "Y";
+                this.fileInputName = UnAvails.NOTAVAILSTRING;
+                this.fileOutputName = "C:\\Users\\alroi\\Dropbox\\DataVerse\\BasisPoint\\output\\standard.out";
+                this.fileOutputFormat = "STD";
+                this.showRecapYn = "Y";
+                this.showIndividualCalc = true;
+                this.showPortSummary = true;
+                requestAll = args[1];
+                break;
+            case 3:
+                this.noArgs = 3;
+                this.useConfigYn = "Y";
+                cmdStr = args[0];
+                cmdStr = cmdStr.toUpperCase();
+                if (cmdStr.equals("CONVERT")) {  // convert input file to JSON and store in ourput file
+                    fileInputName = args[1];
+                    fileOutputName = args[2];
+                    JsonConvert jsonConvert = new JsonConvert(fileInputName, fileOutputName);
+                    jsonConvert.parseStringToJsonFile();
+                    System.out.println("Successfully converted standard string from file " + fileInputName + " to file " + fileOutputName);
+                    System.exit(0);
+                }
+                else {
+                    this.useConfigYn = "N";
+                    this.rootDirectory = UnAvails.NOTAVAILSTRING;
+                    this.isInputJSONYn = args[0];
+                    this.quotesIncluded = args[1];
+                    this.isFileInputYn = "N";
+                    this.isFileOutputYn = "N";
+                    this.fileInputName = UnAvails.NOTAVAILSTRING;
+                    this.fileOutputName = UnAvails.NOTAVAILSTRING;
+                    this.fileOutputFormat = UnAvails.NOTAVAILSTRING;
+                    this.showRecapYn = "N";
+                    requestAll = args[2];
+                }
+                break;
+            case 5:
+                this.noArgs = 2;
+                this.useConfigYn = "Y";
+                this.rootDirectory = args[0];
+                this.isInputJSONYn = args[1];
+                this.isFileInputYn = "Y";
+                this.isFileOutputYn = "Y";
+                this.fileInputName = args[2];
+                this.fileOutputName = args[3];
+                this.fileOutputFormat = args[4];
+                this.showRecapYn = "Y";
+                requestAll = readRequest(this.fileInputName);
+                requestAll = requestAll.replaceAll("\"", "");
+                break;
+            case 10:
+                this.noArgs = 10;
+                this.useConfigYn = args[0];
+                this.rootDirectory = args[1];
+                this.isInputJSONYn = args[2];
+                this.isFileInputYn = args[3];
+                this.isFileOutputYn = args[4];
+                this.fileInputName = args[5];
+                this.fileOutputName = args[6];
+                this.fileOutputFormat = args[7];
+                this.showRecapYn = args[8];
+                if (isFileInputYn.equals("Y"))
+                    requestAll = readRequest(fileInputName);
+                else
+                    requestAll = args[9];
+                requestAll = requestAll.replaceAll("\"", "");
+                break;
+            default:
+                strHelp = "Invalid number of arguments(" + noArgs + ") were entered";
+                strHelp = strHelp + commandLineHelp();
+                System.out.println(strHelp);
+                System.exit(0);
+                break;
+
+        }
+        return requestAll;
+    }
+
+    public String setCommandLineVersions(String[] args) {
+        String requestAll = "No request was specified";
+        if (args.length == 1) {
+            if (args[0].substring(0, 1) == "[{")
+                this.isInputJSONYn = "Y";
+            if (args[0].charAt(0) == '{')
+                this.isInputJSONYn = "Y";
+            this.noArgs = 1;
+            this.useConfigYn = "";
+            this.rootDirectory = "c:\\users\\alroi\\Dropbox\\InvestWare\\BasisPoint";
+            this.isFileInputYn = "N";
+            this.isFileOutputYn = "N";
+            this.fileInputName = UnAvails.NOTAVAILSTRING;
+            this.fileOutputName = UnAvails.NOTAVAILSTRING;
+            this.fileOutputFormat = "STD";
+            this.showIndividualCalc = false;
+            this.showPortSummary = true;
+            this.showRecapYn = "N";
+            requestAll = args[0];
+            return requestAll;
+        }
+        requestAll = setCommandLine(args);
+        return requestAll;
+    }
+
+    public void setDelimiters(int noSecurities) {
+        if (isInputJSONYn.equals("Y")) {
+            if (noSecurities > 1) {
+                consoleMultiPreface = "[";
+                consoleMultiPostFix = "]";
+            } else {
+                consoleMultiPreface = "";
+                consoleMultiPostFix = "";
+            }
+            consoleParamDelimit = ":";
+            consoleLeftBracket = "[";
+            consoleRightBracket = "]";
+            consoleSecStartDelimit = "{";
+            consoleResultHeader = "{";
+            consoleSecEndDelimit = "}";
+            consoleQuote = "\"";
+            consoleCalcDelimit = ",";
+            consolePortfolioDelimit = "";
+        } else {
+            consoleMultiPreface = "";
+            consoleMultiPostFix = "";
+            consoleParamDelimit = "=";
+            consoleLeftBracket = "[";
+            consoleRightBracket = "]";
+            consoleSecStartDelimit = "New=Security";
+            consoleResultHeader = "";
+            consoleSecEndDelimit = "";
+            consoleQuote = "";
+            consoleCalcDelimit = ";";
+            consolePortfolioDelimit = "New=PortfolioStats";
+        }
+        fileOutputFormat = fileOutputFormat.toUpperCase();
+        fileCalcDelimit = "\n";
+        if (fileOutputFormat.equals("STD")) {
+            fileParamDelimit = "=";
+            fileSecDelimit = "New=Security";
+            filePortfolioDelimit = "New=PortfolioStats";
+        } else {
+            fileParamDelimit = ",";
+            fileSecDelimit = "New,Security";
+            filePortfolioDelimit = "New,PortfolioStats";
+        }
+    }
+
+    String readRequest(String fileName) {
+        String strRequest = "";
+        int sLen;
+        Scanner scanner = null;
+        try {
+            File file = new File(fileName);    //creates a new file instance
+            scanner = new Scanner(file);
+
+        } catch (Exception ex) {
+            String errmsg = "Error(BasisPoint): Could not find input file " + fileName;
+            System.out.println(errmsg);
+            System.exit(-1);
+        }
+        String sLine = "";
+        while (scanner.hasNextLine()) {
+            sLine = scanner.nextLine();
+            strRequest += sLine + ";";
+        }
+        sLen = strRequest.length();
+        strRequest = strRequest.substring(0, sLen - 1);
+        // remove the last seni-colon
+        scanner.close();
+        return strRequest;
+    }
+
+
+}

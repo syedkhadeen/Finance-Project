@@ -1,0 +1,62 @@
+{
+  "body": "{\"INSTYPE\":\"FIXEDRATE\",\"BASACCINT\":\"ACT/ACT\",\"CALCREQUEST\":\"[0,2,5,6,7,8,20,38]\",\"CPNRT\":\"3.75\",\"DTMATURITY\":\"10/15/2028\",\"DTSETTLE\":\"1/1/2021\",\"DTFUTUREVALUE\":\"1/1/2022\",\"FACEAMT\":\"100000\",\"INTPERIODICITY\":\"6M\",\"SETTLEPRC\":\"98\",\"DISCMATLEN\":\"[.083333,.25,.5,1,2,3,5,7,10,15,25,30]\",\"DISCPARYN\":\"N\",\"DISCRT\":\"[1.29,1.44,1.61,1.83,1.92,2.01,2.25,2.38,2.46,2.64,2.81, 2.85]\",\"SPOTVOLDN\":\"[3,5,7,9,10,11,14,15,50,55,60,65]\",\"SPOTVOLUP\":\"[4,6,8,10,12,13,14,15,50,55,60,65]\"}",
+  "resource": "/app",
+  "path": "/app",
+  "httpMethod": "POST",
+  "isBase64Encoded": false,
+  "queryStringParameters": {
+    "foo": "bar"
+  },
+  "pathParameters": {
+    "proxy": "/app"
+  },
+  "stageVariables": {
+    "baz": "qux"
+  },
+  "headers": {
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+    "Accept-Encoding": "gzip, deflate, sdch",
+    "Accept-Language": "en-US,en;q=0.8",
+    "Cache-Control": "max-age=0",
+    "CloudFront-Forwarded-Proto": "https",
+    "CloudFront-Is-Desktop-Viewer": "true",
+    "CloudFront-Is-Mobile-Viewer": "false",
+    "CloudFront-Is-SmartTV-Viewer": "false",
+    "CloudFront-Is-Tablet-Viewer": "false",
+    "CloudFront-Viewer-Country": "US",
+    "Host": "1234567890.execute-api.us-east-1.amazonaws.com",
+    "Upgrade-Insecure-Requests": "1",
+    "User-Agent": "Custom User Agent String",
+    "Via": "1.1 08f323deadbeefa7af34d5feb414ce27.cloudfront.net (CloudFront)",
+    "X-Amz-Cf-Id": "cDehVQoZnx43VYQb9j2-nvCh-9z396Uhbp027Y2JvkCPNLmGJHqlaA==",
+    "X-Forwarded-For": "127.0.0.1, 127.0.0.2",
+    "X-Forwarded-Port": "443",
+    "X-Forwarded-Proto": "https"
+  },
+  "requestContext": {
+    "accountId": "123456789012",
+    "resourceId": "123456",
+    "stage": "prod",
+    "requestId": "c6af9ac6-7b61-11e6-9a41-93e8deadbeef",
+    "requestTime": "09/Apr/2015:12:34:56 +0000",
+    "requestTimeEpoch": 1428582896000,
+    "identity": {
+      "cognitoIdentityPoolId": null,
+      "accountId": null,
+      "cognitoIdentityId": null,
+      "caller": null,
+      "accessKey": null,
+      "sourceIp": "127.0.0.1",
+      "cognitoAuthenticationType": null,
+      "cognitoAuthenticationProvider": null,
+      "userArn": null,
+      "userAgent": "Custom User Agent String",
+      "user": null
+    },
+    "path": "/app",
+    "resourcePath": "/{proxy+}",
+    "httpMethod": "POST",
+    "apiId": "1234567890",
+    "protocol": "HTTP/1.1"
+  }
+}

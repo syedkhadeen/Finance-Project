@@ -1,0 +1,54 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  basis-point SAM
+
+Globals:
+  Function:
+    Timeout: 20
+    MemorySize: 512
+
+Parameters:
+  Environment:
+    Type: String
+    Default: v1
+
+Resources:
+  ServerlessApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      Cors:
+        AllowOrigin: "'*'"
+        AllowCredentials: false
+        AllowMethods: "'GET,POST,PUT,DELETE,OPTIONS'"
+        AllowHeaders: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent'"
+      TracingEnabled: true
+      StageName: !Ref Environment
+
+  BasisPointFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: BasisPoint
+      Handler: app.App::handleRequest
+      Runtime: java8.al2
+      Architectures:
+        - x86_64
+      MemorySize: 512
+      Environment:
+        Variables:
+          PARAM1: VALUE
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /bond
+            Method: post
+            RestApiId: !Ref ServerlessApi
+
+Outputs:
+  ServerlessApi:
+    Description: "API Gateway endpoint URL for ${Environment} stage for BasisPoint function"
+    Value: !Sub "https://${ServerlessApi}.execute-api.${AWS::Region}.amazonaws.com/${Environment}/"
+  BasisPointFunction:
+    Description: "Basis Point Lambda Function ARN"
+    Value: !GetAtt BasisPointFunction.Arn

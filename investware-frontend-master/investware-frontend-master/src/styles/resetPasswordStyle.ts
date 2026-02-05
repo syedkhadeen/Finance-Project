@@ -1,0 +1,33 @@
+import { Stack } from '@mui/material';
+import { styled } from '@mui/material/styles';
+
+export const StyledResetPasswordContainer = styled(Stack)(({ theme }) => ({
+  width: '46.5rem',
+  borderRadius: '0.625rem',
+  boxShadow: '0px 4px 50px 0px rgba(0, 0, 0, 0.10)',
+
+  [theme.breakpoints.down('md')]: {
+    width: '100%',
+    boxShadow: 'none',
+  },
+}));
+
+export const StyledResetPasswordSubContainer = styled(Stack)(({ theme }) => ({
+  alignItems: 'center',
+  padding: '2.5rem 4.37rem',
+
+  [theme.breakpoints.down('md')]: {
+    padding: '2.5rem 1.875rem 0rem 1.875rem',
+  },
+}));
+
+export const StyledResetWidthInputStack = styled(Stack)(({ theme }) => ({
+  width: '100%',
+  [theme.breakpoints.down('md')]: {
+    width: '100%',
+  },
+}));
+
+export const StyledResetInputStack = styled(Stack)(({ theme }) => ({
+  gap: '1.5rem',
+}));

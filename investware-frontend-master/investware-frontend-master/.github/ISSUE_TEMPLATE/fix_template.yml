@@ -1,0 +1,47 @@
+name: Fix Template
+description: Describe the fix applied
+title: ':hammer: '
+labels: ['fix']
+assignees: []
+projects: ['Techlabs-do/45']
+
+body:
+  - type: markdown
+    attributes:
+      value: 'Thank you for taking the time to describe a fix that has been applied. Please fill out the following form as completely as possible.'
+
+  - type: textarea
+    id: what-was-the-fix
+    attributes:
+      label: What was the fix?
+      description: Explain what the fix that was applied.
+      placeholder: Describe the fix.
+    validations:
+      required: true
+
+  - type: input
+    id: issue-or-bug-link
+    attributes:
+      label: What issue/Bug was the fix applied for?
+      description: Link of the issue or the bug that the fix was applied.
+      placeholder: Paste the issue or bug link here.
+    validations:
+      required: true
+
+  - type: textarea
+    id: why-was-fix-required
+    attributes:
+      label: Why was the fix required?
+      description: Explain the reason why this fix was required.
+      placeholder: Describe why the fix was necessary.
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional-information
+    attributes:
+      label: Additional information
+      description: Any additional information that is relevant to this issue.
+      placeholder: Any additional context or information.
+    validations:
+      required: false

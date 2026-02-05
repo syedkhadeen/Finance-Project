@@ -1,0 +1,22 @@
+body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Roboto;
+}
+
+a {
+  text-decoration: none;
+  color: #000;
+  cursor: pointer;
+}
+
+:root {
+  --text-black: rgba(0, 0, 0, 0.87);
+  --text-grey: rgba(0, 0, 0, 0.56);
+  --text-grey-100: rgba(0, 0, 0, 0.6);
+  --white: #fff;
+  --sky-blue: #2196f3;
+  --skyblue-100: #1e88e5;
+  --grey-100: #eaecf0;
+}
