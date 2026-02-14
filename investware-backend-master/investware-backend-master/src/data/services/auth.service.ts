@@ -12,7 +12,14 @@ export class AuthService {
   //create user
   public async signUpUser(data: SignupDto) {
     try {
-      return await this.users.create({ data });
+      return await this.users.create({ 
+        data: {
+          auth_id: data.auth_id,
+          email: data.email,
+          firstName: data.firstName,
+          lastName: data.lastName,
+        }
+      });
     } catch {
       throw new HttpError(ERROR_MESSAGES.FAILED_TO_CREATE_USER.statusCode, ERROR_MESSAGES.FAILED_TO_CREATE_USER.message);
     }

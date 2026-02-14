@@ -4,9 +4,18 @@ import { AuthController } from '@infrastructure/controllers/auth.controller';
 import { UserController } from '@infrastructure/controllers/users.controller';
 import { HealthCheckController } from '@infrastructure/controllers/healthcheck.controller';
 import { TradeController } from '@infrastructure/controllers/trade.controller';
+import { PortfolioController } from '@infrastructure/controllers/portfolio.controller';
+import { MarketBondController } from '@infrastructure/controllers/marketBond.controller';
 
 ValidateEnv();
 
-const app = new App([AuthController, UserController, HealthCheckController, TradeController]);
+const app = new App([
+  AuthController,
+  UserController,
+  HealthCheckController,
+  TradeController,
+  PortfolioController,
+  MarketBondController,
+]);
 
 app.listen();

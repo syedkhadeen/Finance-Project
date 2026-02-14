@@ -60,15 +60,22 @@ const SignUpForm = ({ setSignUpSuccess }: Props) => {
       return;
     }
 
+    if (!formData.email || !formData.firstName || !formData.lastName) {
+      toast.error('Please fill in all required fields');
+      return;
+    }
+
     setLoading(true);
     try {
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3002';
-      // The backend expects 'auth_id'. We'll send the email as the auth_id for now.
       await axios.post(`${apiUrl}/v1/api/auth/signup`, {
         auth_id: formData.email,
+        email: formData.email,
+        firstName: formData.firstName,
+        lastName: formData.lastName,
       });
 
-      toast.success('Sign up successful!');
+      toast.success('Sign up successful! Please log in.');
       router.push('/login');
     } catch (error: any) {
       console.error('Signup error:', error);

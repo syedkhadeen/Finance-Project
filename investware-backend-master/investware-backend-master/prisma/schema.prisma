@@ -8,10 +8,16 @@ datasource db {
 }
 
 model Users {
-  id           String   @id @default(cuid())
-  auth_id      String   @unique()
-  created_at   DateTime @default(now())
-  updated_at   DateTime @default(now())
+  id           String      @id @default(cuid())
+  auth_id      String      @unique()
+  email        String      @unique()
+  firstName    String?
+  lastName     String?
+  created_at   DateTime    @default(now())
+  updated_at   DateTime    @updatedAt
+  
+  portfolios   Portfolio[]
+  marketBonds  MarketBond[]
 }
 
 model calls {
@@ -106,4 +112,55 @@ model Sink {
   addOnsId   String
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
+}
+
+model Portfolio {
+  id           String      @id @default(uuid())
+  userId       String
+  abbrevName   String
+  fullName     String
+  strategy     String?
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  
+  user         Users       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  holdings     Holding[]
+  
+  @@unique([userId, abbrevName])
+  @@index([userId])
+  @@map("portfolios")
+}
+
+model Holding {
+  id           String      @id @default(uuid())
+  portfolioId  String
+  isin         String
+  amount       Float
+  price        Float
+  holdDate     DateTime
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  
+  portfolio    Portfolio   @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
+  
+  @@index([portfolioId])
+  @@index([isin])
+  @@map("holdings")
+}
+
+model MarketBond {
+  id           String      @id @default(uuid())
+  userId       String
+  isin         String
+  price        Float
+  exchange     String?
+  date         DateTime
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  
+  user         Users       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@index([userId])
+  @@index([isin])
+  @@map("market_bonds")
 }

@@ -2,7 +2,7 @@
 
 A comprehensive bond trading and calculation platform with Java BasisPoint integration.
 
-## 🚀 Features
+## Features
 
 - **Trade Screen** - Complete bond trading interface with all required fields
 - **Security Search** - Advanced search with filters (Sector, Coupon, Maturity)

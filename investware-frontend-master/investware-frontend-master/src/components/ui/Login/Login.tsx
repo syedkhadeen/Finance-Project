@@ -51,16 +51,25 @@ const Login = () => {
     setLoading(true);
     try {
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3002';
-      // The backend login endpoint expects LoginDto
-      await axios.post(`${apiUrl}/v1/api/auth/login`, {
+      const response = await axios.post(`${apiUrl}/v1/api/auth/login`, {
         email: formData.email,
         password: formData.password,
-        auth_id: formData.email, // using email as auth_id for simplicity
+        auth_id: formData.email,
         type: 'email',
       });
 
-      toast.success('Login successful!');
-      router.push('/');
+      console.log('Login response:', response.data);
+
+      // The response structure is { data: { idToken: "..." } }
+      if (response.data?.data?.idToken) {
+        // Store token in localStorage
+        localStorage.setItem('token', response.data.data.idToken);
+        toast.success('Login successful!');
+        // Use window.location for a hard redirect
+        window.location.href = '/profile';
+      } else {
+        toast.error('Invalid response from server');
+      }
     } catch (error: any) {
       console.error('Login error:', error);
       toast.error(error.response?.data?.message || 'Failed to log in');
