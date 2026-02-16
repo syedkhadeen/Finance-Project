@@ -99,11 +99,14 @@ const SearchModal: React.FC<SearchModalProps> = ({ open, onClose, onSecuritySele
             maxWidth="xl"
             fullWidth
             PaperProps={{
-                sx: { minHeight: '80vh' }
+                sx: { 
+                    minHeight: '80vh',
+                    backgroundColor: 'background.paper'
+                }
             }}
         >
             <DialogTitle sx={{ 
-                backgroundColor: '#1976d2', 
+                backgroundColor: 'primary.main', 
                 color: 'white',
                 display: 'flex',
                 justifyContent: 'space-between',
@@ -123,11 +126,20 @@ const SearchModal: React.FC<SearchModalProps> = ({ open, onClose, onSecuritySele
                 </IconButton>
             </DialogTitle>
 
-            <DialogContent dividers>
+            <DialogContent dividers sx={{ backgroundColor: 'background.default' }}>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                     {/* Search Filters */}
-                    <Box sx={{ mb: 3, p: 2, backgroundColor: '#f5f5f5', borderRadius: 1 }}>
-                        <Typography variant="subtitle1" fontWeight="bold" sx={{ mb: 2 }}>
+                    <Box 
+                        sx={{ 
+                            mb: 3, 
+                            p: 2, 
+                            backgroundColor: 'background.paper', 
+                            borderRadius: 1,
+                            border: '1px solid',
+                            borderColor: 'divider'
+                        }}
+                    >
+                        <Typography variant="subtitle1" fontWeight="bold" sx={{ mb: 2 }} color="text.primary">
                             Search Filters
                         </Typography>
                         <Grid container spacing={2}>
@@ -218,7 +230,7 @@ const SearchModal: React.FC<SearchModalProps> = ({ open, onClose, onSecuritySele
                             color: 'text.secondary'
                         }}>
                             <SearchIcon sx={{ fontSize: 64, opacity: 0.3, mb: 2 }} />
-                            <Typography variant="h6">
+                            <Typography variant="h6" color="text.secondary">
                                 Enter search criteria and click Search
                             </Typography>
                         </Box>
@@ -227,7 +239,7 @@ const SearchModal: React.FC<SearchModalProps> = ({ open, onClose, onSecuritySele
                     {loading && (
                         <Box sx={{ textAlign: 'center', py: 8 }}>
                             <CircularProgress />
-                            <Typography variant="body1" sx={{ mt: 2 }}>
+                            <Typography variant="body1" sx={{ mt: 2 }} color="text.primary">
                                 Searching securities...
                             </Typography>
                         </Box>
@@ -235,7 +247,7 @@ const SearchModal: React.FC<SearchModalProps> = ({ open, onClose, onSecuritySele
                 </LocalizationProvider>
             </DialogContent>
 
-            <DialogActions sx={{ p: 2, gap: 1 }}>
+            <DialogActions sx={{ p: 2, gap: 1, backgroundColor: 'background.paper' }}>
                 <Button 
                     onClick={handleClear} 
                     variant="outlined"

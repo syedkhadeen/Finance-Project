@@ -46,50 +46,100 @@ const ResultSections: React.FC<ResultSectionsProps> = ({ data }) => {
                 <AccordionSummary
                     expandIcon={<ExpandMoreIcon />}
                     sx={{ 
-                        backgroundColor: '#e3f2fd',
-                        '&:hover': { backgroundColor: '#bbdefb' }
+                        backgroundColor: (theme) => theme.palette.mode === 'dark' ? 'rgba(91, 159, 237, 0.15)' : '#e3f2fd',
+                        '&:hover': { 
+                            backgroundColor: (theme) => theme.palette.mode === 'dark' ? 'rgba(91, 159, 237, 0.25)' : '#bbdefb'
+                        }
                     }}
                 >
-                    <Typography variant="h6" fontWeight="bold">
+                    <Typography variant="h6" fontWeight="bold" color="text.primary">
                         Analytics
                     </Typography>
                 </AccordionSummary>
-                <AccordionDetails>
+                <AccordionDetails sx={{ backgroundColor: 'background.default' }}>
                     <Grid container spacing={2}>
                         <Grid item xs={12} md={4}>
-                            <Paper elevation={0} sx={{ p: 2, backgroundColor: '#f5f5f5' }}>
+                            <Paper 
+                                elevation={0} 
+                                sx={{ 
+                                    p: 2, 
+                                    backgroundColor: 'background.paper',
+                                    border: '1px solid',
+                                    borderColor: 'divider'
+                                }}
+                            >
                                 <Typography variant="caption" color="text.secondary">Principal</Typography>
-                                <Typography variant="h6">${analytics?.principal?.toLocaleString()}</Typography>
+                                <Typography variant="h6" color="text.primary">${analytics?.principal?.toLocaleString()}</Typography>
                             </Paper>
                         </Grid>
                         <Grid item xs={12} md={4}>
-                            <Paper elevation={0} sx={{ p: 2, backgroundColor: '#f5f5f5' }}>
+                            <Paper 
+                                elevation={0} 
+                                sx={{ 
+                                    p: 2, 
+                                    backgroundColor: 'background.paper',
+                                    border: '1px solid',
+                                    borderColor: 'divider'
+                                }}
+                            >
                                 <Typography variant="caption" color="text.secondary">Accrued</Typography>
-                                <Typography variant="h6">${analytics?.accrued?.toLocaleString()}</Typography>
+                                <Typography variant="h6" color="text.primary">${analytics?.accrued?.toLocaleString()}</Typography>
                             </Paper>
                         </Grid>
                         <Grid item xs={12} md={4}>
-                            <Paper elevation={0} sx={{ p: 2, backgroundColor: '#f5f5f5' }}>
+                            <Paper 
+                                elevation={0} 
+                                sx={{ 
+                                    p: 2, 
+                                    backgroundColor: 'background.paper',
+                                    border: '1px solid',
+                                    borderColor: 'divider'
+                                }}
+                            >
                                 <Typography variant="caption" color="text.secondary">Payment</Typography>
-                                <Typography variant="h6">${analytics?.netPayment?.toLocaleString()}</Typography>
+                                <Typography variant="h6" color="text.primary">${analytics?.netPayment?.toLocaleString()}</Typography>
                             </Paper>
                         </Grid>
                         <Grid item xs={12} md={4}>
-                            <Paper elevation={0} sx={{ p: 2, backgroundColor: '#f5f5f5' }}>
+                            <Paper 
+                                elevation={0} 
+                                sx={{ 
+                                    p: 2, 
+                                    backgroundColor: 'background.paper',
+                                    border: '1px solid',
+                                    borderColor: 'divider'
+                                }}
+                            >
                                 <Typography variant="caption" color="text.secondary">Price</Typography>
-                                <Typography variant="h6">{analytics?.price}</Typography>
+                                <Typography variant="h6" color="text.primary">{analytics?.price}</Typography>
                             </Paper>
                         </Grid>
                         <Grid item xs={12} md={4}>
-                            <Paper elevation={0} sx={{ p: 2, backgroundColor: '#f5f5f5' }}>
+                            <Paper 
+                                elevation={0} 
+                                sx={{ 
+                                    p: 2, 
+                                    backgroundColor: 'background.paper',
+                                    border: '1px solid',
+                                    borderColor: 'divider'
+                                }}
+                            >
                                 <Typography variant="caption" color="text.secondary">Yield to Maturity</Typography>
-                                <Typography variant="h6">{analytics?.yieldToMaturity}%</Typography>
+                                <Typography variant="h6" color="text.primary">{analytics?.yieldToMaturity}%</Typography>
                             </Paper>
                         </Grid>
                         <Grid item xs={12} md={4}>
-                            <Paper elevation={0} sx={{ p: 2, backgroundColor: '#f5f5f5' }}>
+                            <Paper 
+                                elevation={0} 
+                                sx={{ 
+                                    p: 2, 
+                                    backgroundColor: 'background.paper',
+                                    border: '1px solid',
+                                    borderColor: 'divider'
+                                }}
+                            >
                                 <Typography variant="caption" color="text.secondary">Yield to Worst</Typography>
-                                <Typography variant="h6">{analytics?.yieldToWorst}%</Typography>
+                                <Typography variant="h6" color="text.primary">{analytics?.yieldToWorst}%</Typography>
                             </Paper>
                         </Grid>
                     </Grid>
@@ -105,50 +155,100 @@ const ResultSections: React.FC<ResultSectionsProps> = ({ data }) => {
                 <AccordionSummary
                     expandIcon={<ExpandMoreIcon />}
                     sx={{ 
-                        backgroundColor: '#fff3e0',
-                        '&:hover': { backgroundColor: '#ffe0b2' }
+                        backgroundColor: (theme) => theme.palette.mode === 'dark' ? 'rgba(255, 197, 61, 0.15)' : '#fff3e0',
+                        '&:hover': { 
+                            backgroundColor: (theme) => theme.palette.mode === 'dark' ? 'rgba(255, 197, 61, 0.25)' : '#ffe0b2'
+                        }
                     }}
                 >
-                    <Typography variant="h6" fontWeight="bold">
+                    <Typography variant="h6" fontWeight="bold" color="text.primary">
                         Risk
                     </Typography>
                 </AccordionSummary>
-                <AccordionDetails>
+                <AccordionDetails sx={{ backgroundColor: 'background.default' }}>
                     <Grid container spacing={2}>
                         <Grid item xs={12} md={4}>
-                            <Paper elevation={0} sx={{ p: 2, backgroundColor: '#f5f5f5' }}>
+                            <Paper 
+                                elevation={0} 
+                                sx={{ 
+                                    p: 2, 
+                                    backgroundColor: 'background.paper',
+                                    border: '1px solid',
+                                    borderColor: 'divider'
+                                }}
+                            >
                                 <Typography variant="caption" color="text.secondary">Mod Duration</Typography>
-                                <Typography variant="h6">{analytics?.duration?.toFixed(3)}</Typography>
+                                <Typography variant="h6" color="text.primary">{analytics?.duration?.toFixed(3)}</Typography>
                             </Paper>
                         </Grid>
                         <Grid item xs={12} md={4}>
-                            <Paper elevation={0} sx={{ p: 2, backgroundColor: '#f5f5f5' }}>
+                            <Paper 
+                                elevation={0} 
+                                sx={{ 
+                                    p: 2, 
+                                    backgroundColor: 'background.paper',
+                                    border: '1px solid',
+                                    borderColor: 'divider'
+                                }}
+                            >
                                 <Typography variant="caption" color="text.secondary">Convexity</Typography>
-                                <Typography variant="h6">{analytics?.convexity?.toFixed(4)}</Typography>
+                                <Typography variant="h6" color="text.primary">{analytics?.convexity?.toFixed(4)}</Typography>
                             </Paper>
                         </Grid>
                         <Grid item xs={12} md={4}>
-                            <Paper elevation={0} sx={{ p: 2, backgroundColor: '#f5f5f5' }}>
+                            <Paper 
+                                elevation={0} 
+                                sx={{ 
+                                    p: 2, 
+                                    backgroundColor: 'background.paper',
+                                    border: '1px solid',
+                                    borderColor: 'divider'
+                                }}
+                            >
                                 <Typography variant="caption" color="text.secondary">Maturity Length</Typography>
-                                <Typography variant="h6">{analytics?.maturityYears?.toFixed(2)} years</Typography>
+                                <Typography variant="h6" color="text.primary">{analytics?.maturityYears?.toFixed(2)} years</Typography>
                             </Paper>
                         </Grid>
                         <Grid item xs={12} md={4}>
-                            <Paper elevation={0} sx={{ p: 2, backgroundColor: '#f5f5f5' }}>
+                            <Paper 
+                                elevation={0} 
+                                sx={{ 
+                                    p: 2, 
+                                    backgroundColor: 'background.paper',
+                                    border: '1px solid',
+                                    borderColor: 'divider'
+                                }}
+                            >
                                 <Typography variant="caption" color="text.secondary">OAS Spread (bp)</Typography>
-                                <Typography variant="h6">{analytics?.zSpread?.toFixed(2)}</Typography>
+                                <Typography variant="h6" color="text.primary">{analytics?.zSpread?.toFixed(2)}</Typography>
                             </Paper>
                         </Grid>
                         <Grid item xs={12} md={4}>
-                            <Paper elevation={0} sx={{ p: 2, backgroundColor: '#f5f5f5' }}>
+                            <Paper 
+                                elevation={0} 
+                                sx={{ 
+                                    p: 2, 
+                                    backgroundColor: 'background.paper',
+                                    border: '1px solid',
+                                    borderColor: 'divider'
+                                }}
+                            >
                                 <Typography variant="caption" color="text.secondary">OAS Duration(yr)</Typography>
-                                <Typography variant="h6">{analytics?.duration?.toFixed(2)}</Typography>
+                                <Typography variant="h6" color="text.primary">{analytics?.duration?.toFixed(2)}</Typography>
                             </Paper>
                         </Grid>
                         <Grid item xs={12} md={4}>
-                            <Paper elevation={0} sx={{ p: 2, backgroundColor: '#f5f5f5' }}>
+                            <Paper 
+                                elevation={0} 
+                                sx={{ 
+                                    p: 2, 
+                                    backgroundColor: 'background.paper',
+                                    border: '1px solid',
+                                    borderColor: 'divider'
+                                }}
+                            >
                                 <Typography variant="caption" color="text.secondary">Oas Convexity(yr*yr)</Typography>
-                                <Typography variant="h6">{analytics?.convexity?.toFixed(2)}</Typography>
+                                <Typography variant="h6" color="text.primary">{analytics?.convexity?.toFixed(2)}</Typography>
                             </Paper>
                         </Grid>
                     </Grid>
@@ -164,88 +264,47 @@ const ResultSections: React.FC<ResultSectionsProps> = ({ data }) => {
                 <AccordionSummary
                     expandIcon={<ExpandMoreIcon />}
                     sx={{ 
-                        backgroundColor: '#e8f5e9',
-                        '&:hover': { backgroundColor: '#c8e6c9' }
+                        backgroundColor: (theme) => theme.palette.mode === 'dark' ? 'rgba(115, 209, 61, 0.15)' : '#e8f5e9',
+                        '&:hover': { 
+                            backgroundColor: (theme) => theme.palette.mode === 'dark' ? 'rgba(115, 209, 61, 0.25)' : '#c8e6c9'
+                        }
                     }}
                 >
-                    <Typography variant="h6" fontWeight="bold">
+                    <Typography variant="h6" fontWeight="bold" color="text.primary">
                         Projection
                     </Typography>
                 </AccordionSummary>
-                <AccordionDetails>
+                <AccordionDetails sx={{ backgroundColor: 'background.default' }}>
                     <Grid container spacing={2}>
-                        <Grid item xs={12} md={4}>
-                            <Paper elevation={0} sx={{ p: 2, backgroundColor: '#f5f5f5' }}>
-                                <Typography variant="caption" color="text.secondary">Fair Value</Typography>
-                                <Typography variant="h6">${analytics?.fairValue?.toLocaleString()}</Typography>
-                            </Paper>
-                        </Grid>
-                        <Grid item xs={12} md={4}>
-                            <Paper elevation={0} sx={{ p: 2, backgroundColor: '#f5f5f5' }}>
-                                <Typography variant="caption" color="text.secondary">Z-Spread</Typography>
-                                <Typography variant="h6">{analytics?.zSpread?.toFixed(2)}</Typography>
-                            </Paper>
-                        </Grid>
-                        <Grid item xs={12} md={4}>
-                            <Paper elevation={0} sx={{ p: 2, backgroundColor: '#f5f5f5' }}>
-                                <Typography variant="caption" color="text.secondary">Generated Cash</Typography>
-                                <Typography variant="h6">$0.00</Typography>
-                            </Paper>
-                        </Grid>
-                        <Grid item xs={12} md={4}>
-                            <Paper elevation={0} sx={{ p: 2, backgroundColor: '#f5f5f5' }}>
-                                <Typography variant="caption" color="text.secondary">PnL Carry</Typography>
-                                <Typography variant="h6">$0.00</Typography>
-                            </Paper>
-                        </Grid>
-                        <Grid item xs={12} md={4}>
-                            <Paper elevation={0} sx={{ p: 2, backgroundColor: '#f5f5f5' }}>
-                                <Typography variant="caption" color="text.secondary">PnlRoll</Typography>
-                                <Typography variant="h6">$0.00</Typography>
-                            </Paper>
-                        </Grid>
-                        <Grid item xs={12} md={4}>
-                            <Paper elevation={0} sx={{ p: 2, backgroundColor: '#f5f5f5' }}>
-                                <Typography variant="caption" color="text.secondary">PnlFinance</Typography>
-                                <Typography variant="h6">$0.00</Typography>
-                            </Paper>
-                        </Grid>
-                        <Grid item xs={12} md={4}>
-                            <Paper elevation={0} sx={{ p: 2, backgroundColor: '#f5f5f5' }}>
-                                <Typography variant="caption" color="text.secondary">Future Return</Typography>
-                                <Typography variant="h6">{analytics?.futureReturn}%</Typography>
-                            </Paper>
-                        </Grid>
-                        <Grid item xs={12} md={4}>
-                            <Paper elevation={0} sx={{ p: 2, backgroundColor: '#f5f5f5' }}>
-                                <Typography variant="caption" color="text.secondary">Upside Future Return</Typography>
-                                <Typography variant="h6">{analytics?.futureReturnUpSide}%</Typography>
-                            </Paper>
-                        </Grid>
-                        <Grid item xs={12} md={4}>
-                            <Paper elevation={0} sx={{ p: 2, backgroundColor: '#f5f5f5' }}>
-                                <Typography variant="caption" color="text.secondary">Down Side Return</Typography>
-                                <Typography variant="h6">{analytics?.futureReturnDnSide}%</Typography>
-                            </Paper>
-                        </Grid>
-                        <Grid item xs={12} md={4}>
-                            <Paper elevation={0} sx={{ p: 2, backgroundColor: '#f5f5f5' }}>
-                                <Typography variant="caption" color="text.secondary">DV01-Parallel</Typography>
-                                <Typography variant="h6">0</Typography>
-                            </Paper>
-                        </Grid>
-                        <Grid item xs={12} md={4}>
-                            <Paper elevation={0} sx={{ p: 2, backgroundColor: '#f5f5f5' }}>
-                                <Typography variant="caption" color="text.secondary">DV01-2x5s</Typography>
-                                <Typography variant="h6">0</Typography>
-                            </Paper>
-                        </Grid>
-                        <Grid item xs={12} md={4}>
-                            <Paper elevation={0} sx={{ p: 2, backgroundColor: '#f5f5f5' }}>
-                                <Typography variant="caption" color="text.secondary">DV01-5s10s</Typography>
-                                <Typography variant="h6">0</Typography>
-                            </Paper>
-                        </Grid>
+                        {[
+                            { label: 'Fair Value', value: `$${analytics?.fairValue?.toLocaleString()}` },
+                            { label: 'Z-Spread', value: analytics?.zSpread?.toFixed(2) },
+                            { label: 'Generated Cash', value: '$0.00' },
+                            { label: 'PnL Carry', value: '$0.00' },
+                            { label: 'PnlRoll', value: '$0.00' },
+                            { label: 'PnlFinance', value: '$0.00' },
+                            { label: 'Future Return', value: `${analytics?.futureReturn}%` },
+                            { label: 'Upside Future Return', value: `${analytics?.futureReturnUpSide}%` },
+                            { label: 'Down Side Return', value: `${analytics?.futureReturnDnSide}%` },
+                            { label: 'DV01-Parallel', value: '0' },
+                            { label: 'DV01-2x5s', value: '0' },
+                            { label: 'DV01-5s10s', value: '0' }
+                        ].map((item, idx) => (
+                            <Grid item xs={12} md={4} key={idx}>
+                                <Paper 
+                                    elevation={0} 
+                                    sx={{ 
+                                        p: 2, 
+                                        backgroundColor: 'background.paper',
+                                        border: '1px solid',
+                                        borderColor: 'divider'
+                                    }}
+                                >
+                                    <Typography variant="caption" color="text.secondary">{item.label}</Typography>
+                                    <Typography variant="h6" color="text.primary">{item.value}</Typography>
+                                </Paper>
+                            </Grid>
+                        ))}
                     </Grid>
                 </AccordionDetails>
             </Accordion>
@@ -259,35 +318,41 @@ const ResultSections: React.FC<ResultSectionsProps> = ({ data }) => {
                 <AccordionSummary
                     expandIcon={<ExpandMoreIcon />}
                     sx={{ 
-                        backgroundColor: '#f3e5f5',
-                        '&:hover': { backgroundColor: '#e1bee7' }
+                        backgroundColor: (theme) => theme.palette.mode === 'dark' ? 'rgba(109, 123, 206, 0.15)' : '#f3e5f5',
+                        '&:hover': { 
+                            backgroundColor: (theme) => theme.palette.mode === 'dark' ? 'rgba(109, 123, 206, 0.25)' : '#e1bee7'
+                        }
                     }}
                 >
-                    <Typography variant="h6" fontWeight="bold">
+                    <Typography variant="h6" fontWeight="bold" color="text.primary">
                         Cashflow
                     </Typography>
                 </AccordionSummary>
-                <AccordionDetails>
+                <AccordionDetails sx={{ backgroundColor: 'background.default' }}>
                     {cashflow && cashflow.length > 0 ? (
-                        <TableContainer component={Paper} variant="outlined">
+                        <TableContainer 
+                            component={Paper} 
+                            variant="outlined"
+                            sx={{ backgroundColor: 'background.paper' }}
+                        >
                             <Table size="small">
-                                <TableHead sx={{ backgroundColor: '#f5f5f5' }}>
+                                <TableHead>
                                     <TableRow>
-                                        <TableCell align="center">Date</TableCell>
-                                        <TableCell align="center">DayOfWk</TableCell>
-                                        <TableCell align="center">Periods</TableCell>
-                                        <TableCell align="center">Years</TableCell>
-                                        <TableCell align="center">Total Cash</TableCell>
-                                        <TableCell align="center">Total Prin</TableCell>
-                                        <TableCell align="center">Sched Prin</TableCell>
-                                        <TableCell align="center">Interest</TableCell>
-                                        <TableCell align="center">Fed taxes</TableCell>
-                                        <TableCell align="center">State tax</TableCell>
+                                        <TableCell align="center" sx={{ backgroundColor: 'background.default', fontWeight: 600 }}>Date</TableCell>
+                                        <TableCell align="center" sx={{ backgroundColor: 'background.default', fontWeight: 600 }}>DayOfWk</TableCell>
+                                        <TableCell align="center" sx={{ backgroundColor: 'background.default', fontWeight: 600 }}>Periods</TableCell>
+                                        <TableCell align="center" sx={{ backgroundColor: 'background.default', fontWeight: 600 }}>Years</TableCell>
+                                        <TableCell align="center" sx={{ backgroundColor: 'background.default', fontWeight: 600 }}>Total Cash</TableCell>
+                                        <TableCell align="center" sx={{ backgroundColor: 'background.default', fontWeight: 600 }}>Total Prin</TableCell>
+                                        <TableCell align="center" sx={{ backgroundColor: 'background.default', fontWeight: 600 }}>Sched Prin</TableCell>
+                                        <TableCell align="center" sx={{ backgroundColor: 'background.default', fontWeight: 600 }}>Interest</TableCell>
+                                        <TableCell align="center" sx={{ backgroundColor: 'background.default', fontWeight: 600 }}>Fed taxes</TableCell>
+                                        <TableCell align="center" sx={{ backgroundColor: 'background.default', fontWeight: 600 }}>State tax</TableCell>
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
                                     {cashflow.map((row: any, index: number) => (
-                                        <TableRow key={index}>
+                                        <TableRow key={index} hover>
                                             <TableCell align="center">{row.date}</TableCell>
                                             <TableCell align="center">{row.dayOfWeek}</TableCell>
                                             <TableCell align="center">{row.periods.toFixed(4)}</TableCell>
@@ -318,27 +383,33 @@ const ResultSections: React.FC<ResultSectionsProps> = ({ data }) => {
                 <AccordionSummary
                     expandIcon={<ExpandMoreIcon />}
                     sx={{ 
-                        backgroundColor: '#fce4ec',
-                        '&:hover': { backgroundColor: '#f8bbd0' }
+                        backgroundColor: (theme) => theme.palette.mode === 'dark' ? 'rgba(255, 77, 79, 0.15)' : '#fce4ec',
+                        '&:hover': { 
+                            backgroundColor: (theme) => theme.palette.mode === 'dark' ? 'rgba(255, 77, 79, 0.25)' : '#f8bbd0'
+                        }
                     }}
                 >
-                    <Typography variant="h6" fontWeight="bold">
+                    <Typography variant="h6" fontWeight="bold" color="text.primary">
                         Key Rate Duration
                     </Typography>
                 </AccordionSummary>
-                <AccordionDetails>
+                <AccordionDetails sx={{ backgroundColor: 'background.default' }}>
                     {keyRateDuration && keyRateDuration.length > 0 ? (
-                        <TableContainer component={Paper} variant="outlined">
+                        <TableContainer 
+                            component={Paper} 
+                            variant="outlined"
+                            sx={{ backgroundColor: 'background.paper' }}
+                        >
                             <Table size="small">
-                                <TableHead sx={{ backgroundColor: '#f5f5f5' }}>
+                                <TableHead>
                                     <TableRow>
-                                        <TableCell align="center">Key Rate Term</TableCell>
-                                        <TableCell align="center">Key Rate(%)</TableCell>
+                                        <TableCell align="center" sx={{ backgroundColor: 'background.default', fontWeight: 600 }}>Key Rate Term</TableCell>
+                                        <TableCell align="center" sx={{ backgroundColor: 'background.default', fontWeight: 600 }}>Key Rate(%)</TableCell>
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
                                     {keyRateDuration.map((row: any, index: number) => (
-                                        <TableRow key={index}>
+                                        <TableRow key={index} hover>
                                             <TableCell align="center">{row.tenor}</TableCell>
                                             <TableCell align="center">{row.duration}</TableCell>
                                         </TableRow>

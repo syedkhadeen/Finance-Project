@@ -1,6 +1,6 @@
 # Investware Bond Calculator
 
-A comprehensive bond trading and calculation platform with Java BasisPoint integration.
+A comprehensive bond trading and calculation platform with Java BasisPoint integration and a modern, professional UI design system.
 
 ## Features
 
@@ -9,6 +9,9 @@ A comprehensive bond trading and calculation platform with Java BasisPoint integ
 - **Bond Calculations** - Yield, Duration, Convexity, Cashflows, Key Rate Duration
 - **Java BasisPoint Integration** - Professional-grade calculation engine
 - **Real-time Results** - Analytics, Risk metrics, Projections, Cashflows
+- **🎨 Modern Design System** - Professional UI with light/dark mode support
+- **📱 Fully Responsive** - Works seamlessly on desktop, tablet, and mobile
+- **♿ Accessible** - WCAG compliant with keyboard navigation
 
 ## 📁 Project Structure
 
@@ -173,13 +176,57 @@ NEXT_PUBLIC_API_URL=http://localhost:3002
 ### Frontend
 - **Next.js 14** - React framework
 - **TypeScript** - Type safety
-- **Tailwind CSS** - Styling
-- **Shadcn/ui** - UI components
+- **Material-UI (MUI)** - Component library
+- **Custom Design System** - Professional, minimalistic UI
+- **Light/Dark Mode** - Seamless theme switching
 
 ### Java BasisPoint
 - **Java 11+**
 - **Gson** - JSON processing
 - Professional bond calculation algorithms
+
+## 🎨 Design System
+
+The frontend includes a comprehensive design system with:
+
+- **16 Reusable Components** - Button, Input, Card, Modal, Table, and more
+- **Light & Dark Mode** - Smooth theme switching with localStorage persistence
+- **Professional Color Palette** - Soft grays, whites, muted accents (no flashy colors)
+- **Responsive Design** - Mobile-first approach with breakpoints
+- **Accessibility** - WCAG compliant, keyboard navigation, screen reader support
+- **TypeScript** - Full type safety across all components
+
+### Design System Pages
+
+- **Component Showcase**: http://localhost:3001/design-system
+- **Dashboard Example**: http://localhost:3001/dashboard-example
+
+### Documentation
+
+- **Complete Guide**: `investware-frontend-master/investware-frontend-master/DESIGN_SYSTEM.md`
+- **Quick Start**: `investware-frontend-master/investware-frontend-master/QUICK_START_DESIGN.md`
+- **Summary**: `investware-frontend-master/investware-frontend-master/DESIGN_SYSTEM_SUMMARY.md`
+
+### Using Components
+
+```tsx
+import { Button, Input, Card, Table, PageContainer } from '@/components/common';
+
+export default function MyPage() {
+  return (
+    <PageContainer>
+      <Card title="My Card">
+        <Input label="Email" type="email" />
+        <Button variant="contained">Submit</Button>
+      </Card>
+    </PageContainer>
+  );
+}
+```
+
+### Theme Toggle
+
+Light/dark mode toggle is available in the header. Theme preference is automatically saved and respects system preferences.
 
 ## 🧪 Testing
 

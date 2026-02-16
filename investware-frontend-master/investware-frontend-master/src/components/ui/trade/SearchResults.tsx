@@ -91,7 +91,7 @@ const SearchResults: React.FC<SearchResultsProps> = ({ data, onSecuritySelect })
                 variant="h6" 
                 fontWeight="bold" 
                 sx={{ 
-                    backgroundColor: '#1976d2', 
+                    backgroundColor: 'primary.main', 
                     color: 'white',
                     p: 1.5, 
                     borderRadius: '4px 4px 0 0' 
@@ -106,40 +106,43 @@ const SearchResults: React.FC<SearchResultsProps> = ({ data, onSecuritySelect })
                     borderRadius: '0 0 4px 4px', 
                     borderTop: 'none',
                     maxHeight: 400,
-                    overflow: 'auto'
+                    overflow: 'auto',
+                    backgroundColor: 'background.paper'
                 }}
             >
                 <Table size="small" stickyHeader>
                     <TableHead>
-                        <TableRow sx={{ backgroundColor: '#f5f5f5' }}>
-                            <TableCell align="center" sx={{ fontWeight: 'bold', backgroundColor: '#f5f5f5' }}>
+                        <TableRow>
+                            <TableCell align="center" sx={{ fontWeight: 'bold', backgroundColor: 'background.default' }}>
                                 {loading ? <CircularProgress size={20} /> : 'Select'}
                             </TableCell>
-                            <TableCell align="center" sx={{ fontWeight: 'bold', backgroundColor: '#f5f5f5' }}>Security</TableCell>
-                            <TableCell align="center" sx={{ fontWeight: 'bold', backgroundColor: '#f5f5f5' }}>Sector</TableCell>
-                            <TableCell align="center" sx={{ fontWeight: 'bold', backgroundColor: '#f5f5f5' }}>Par</TableCell>
-                            <TableCell align="center" sx={{ fontWeight: 'bold', backgroundColor: '#f5f5f5' }}>Price</TableCell>
-                            <TableCell align="center" sx={{ fontWeight: 'bold', backgroundColor: '#f5f5f5' }}>Accrued Interest</TableCell>
-                            <TableCell align="center" sx={{ fontWeight: 'bold', backgroundColor: '#f5f5f5' }}>Yield-to-Maturity</TableCell>
-                            <TableCell align="center" sx={{ fontWeight: 'bold', backgroundColor: '#f5f5f5' }}>Yield-to-Worst</TableCell>
-                            <TableCell align="center" sx={{ fontWeight: 'bold', backgroundColor: '#f5f5f5' }}>Market Value</TableCell>
-                            <TableCell align="center" sx={{ fontWeight: 'bold', backgroundColor: '#f5f5f5' }}>Maturity Length</TableCell>
-                            <TableCell align="center" sx={{ fontWeight: 'bold', backgroundColor: '#f5f5f5' }}>Duration</TableCell>
-                            <TableCell align="center" sx={{ fontWeight: 'bold', backgroundColor: '#f5f5f5' }}>Convexity</TableCell>
-                            <TableCell align="center" sx={{ fontWeight: 'bold', backgroundColor: '#f5f5f5' }}>Fair Value</TableCell>
-                            <TableCell align="center" sx={{ fontWeight: 'bold', backgroundColor: '#f5f5f5' }}>Z-Spread</TableCell>
-                            <TableCell align="center" sx={{ fontWeight: 'bold', backgroundColor: '#f5f5f5' }}>Forecast Return</TableCell>
-                            <TableCell align="center" sx={{ fontWeight: 'bold', backgroundColor: '#f5f5f5' }}>Forecast UpSide</TableCell>
-                            <TableCell align="center" sx={{ fontWeight: 'bold', backgroundColor: '#f5f5f5' }}>Forecast DownSide</TableCell>
+                            <TableCell align="center" sx={{ fontWeight: 'bold', backgroundColor: 'background.default' }}>Security</TableCell>
+                            <TableCell align="center" sx={{ fontWeight: 'bold', backgroundColor: 'background.default' }}>Sector</TableCell>
+                            <TableCell align="center" sx={{ fontWeight: 'bold', backgroundColor: 'background.default' }}>Par</TableCell>
+                            <TableCell align="center" sx={{ fontWeight: 'bold', backgroundColor: 'background.default' }}>Price</TableCell>
+                            <TableCell align="center" sx={{ fontWeight: 'bold', backgroundColor: 'background.default' }}>Accrued Interest</TableCell>
+                            <TableCell align="center" sx={{ fontWeight: 'bold', backgroundColor: 'background.default' }}>Yield-to-Maturity</TableCell>
+                            <TableCell align="center" sx={{ fontWeight: 'bold', backgroundColor: 'background.default' }}>Yield-to-Worst</TableCell>
+                            <TableCell align="center" sx={{ fontWeight: 'bold', backgroundColor: 'background.default' }}>Market Value</TableCell>
+                            <TableCell align="center" sx={{ fontWeight: 'bold', backgroundColor: 'background.default' }}>Maturity Length</TableCell>
+                            <TableCell align="center" sx={{ fontWeight: 'bold', backgroundColor: 'background.default' }}>Duration</TableCell>
+                            <TableCell align="center" sx={{ fontWeight: 'bold', backgroundColor: 'background.default' }}>Convexity</TableCell>
+                            <TableCell align="center" sx={{ fontWeight: 'bold', backgroundColor: 'background.default' }}>Fair Value</TableCell>
+                            <TableCell align="center" sx={{ fontWeight: 'bold', backgroundColor: 'background.default' }}>Z-Spread</TableCell>
+                            <TableCell align="center" sx={{ fontWeight: 'bold', backgroundColor: 'background.default' }}>Forecast Return</TableCell>
+                            <TableCell align="center" sx={{ fontWeight: 'bold', backgroundColor: 'background.default' }}>Forecast UpSide</TableCell>
+                            <TableCell align="center" sx={{ fontWeight: 'bold', backgroundColor: 'background.default' }}>Forecast DownSide</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
                         {data.map((row, index) => (
                             <TableRow 
                                 key={index}
+                                hover
                                 sx={{ 
-                                    backgroundColor: selectedSecurity === row.security ? '#e3f2fd' : 'inherit',
-                                    '&:hover': { backgroundColor: '#f5f5f5' }
+                                    backgroundColor: selectedSecurity === row.security ? (theme) => 
+                                        theme.palette.mode === 'dark' ? 'rgba(91, 159, 237, 0.15)' : '#e3f2fd' 
+                                        : 'inherit'
                                 }}
                             >
                                 <TableCell align="center">

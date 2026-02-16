@@ -132,6 +132,23 @@ public class JSONParser {
         for (String name : names) {
             if (jsonObj.has(name) && !jsonObj.get(name).isJsonNull()) {
                 String value = jsonObj.get(name).getAsString();
+                strReq.append(name).append("=").append(value).
+                if (jsonObj.get(name).isJsonPrimitive()) {
+                    // For primitives (numbers, booleans, strings), get the raw value
+                    if (jsonObj.get(name).getAsJsonPrimitive().isNumber()) {
+                        value = jsonObj.get(name).getAsNumber().toString();
+                    } else if (jsonObj.get(name).getAsJsonPrimitive().isBoolean()) {
+                        value = jsonObj.get(name).getAsBoolean() ? "true" : "false";
+                    } else {
+                        value = jsonObj.get(name).getAsString();
+                    }
+                } else if (jsonObj.get(name).isJsonArray()) {
+                    // For arrays, convert to string representation
+                    value = jsonObj.get(name).toString();
+                } else {
+                    // For objects or other types, use string representation
+                    value = jsonObj.get(name).getAsString();
+                }
                 strReq.append(name).append("=").append(value).append(";");
             }
         }

@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import Layout from '@/components/ui/Layout/Layout';
 import portfolioService from '@/services/portfolio.service';
 import authService from '@/services/auth.service';
 import {
@@ -65,17 +64,14 @@ const CreatePortfolio = () => {
 
   if (checking) {
     return (
-      <Layout>
-        <Box display="flex" justifyContent="center" alignItems="center" minHeight="80vh">
-          <CircularProgress />
-        </Box>
-      </Layout>
+      <Box display="flex" justifyContent="center" alignItems="center" minHeight="80vh">
+        <CircularProgress />
+      </Box>
     );
   }
 
   return (
-    <Layout>
-      <Container maxWidth="md" sx={{ mt: 4, mb: 4 }}>
+    <Container maxWidth="md" sx={{ mt: 4, mb: 4 }}>
         <Button
           startIcon={<ArrowBack />}
           onClick={() => router.back()}
@@ -151,7 +147,6 @@ const CreatePortfolio = () => {
           </CardContent>
         </Card>
       </Container>
-    </Layout>
   );
 };
 

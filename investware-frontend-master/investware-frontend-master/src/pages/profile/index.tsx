@@ -1,19 +1,19 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import Layout from '@/components/ui/Layout/Layout';
 import authService from '@/services/auth.service';
 import portfolioService, { Portfolio } from '@/services/portfolio.service';
 import {
   Box,
   Container,
   Typography,
-  Card,
-  CardContent,
   Grid,
-  Button,
   CircularProgress,
+  Avatar,
+  Chip,
+  Paper,
 } from '@mui/material';
-import { AccountCircle, Logout, Add, TrendingUp } from '@mui/icons-material';
+import { Card, Button, Breadcrumbs, EmptyState, Section } from '@/components/common';
+import { AccountCircle, Logout, Add, TrendingUp, FolderOpen } from '@mui/icons-material';
 
 const ProfilePage = () => {
   const router = useRouter();
@@ -28,7 +28,7 @@ const ProfilePage = () => {
     }
 
     loadData();
-  }, []);
+  }, [router]);
 
   const loadData = async () => {
     try {
@@ -67,134 +67,212 @@ const ProfilePage = () => {
 
   if (loading) {
     return (
-      <Layout>
-        <Box display="flex" justifyContent="center" alignItems="center" minHeight="80vh">
-          <CircularProgress />
-        </Box>
-      </Layout>
+      <Box display="flex" justifyContent="center" alignItems="center" minHeight="80vh">
+        <CircularProgress />
+      </Box>
     );
   }
 
   return (
-    <Layout>
-      <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-        {/* Header */}
-        <Box display="flex" justifyContent="space-between" alignItems="center" mb={4}>
-          <Box display="flex" alignItems="center" gap={2}>
-            <AccountCircle sx={{ fontSize: 48, color: 'primary.main' }} />
-            <Box>
-              <Typography variant="h4" component="h1">
-                My Profile
-              </Typography>
-              <Typography variant="body1" color="text.secondary">
-                {userEmail}
-              </Typography>
-            </Box>
-          </Box>
-          <Button
-            variant="outlined"
-            color="error"
-            startIcon={<Logout />}
-            onClick={handleLogout}
+    <Container maxWidth="xl" sx={{ py: 4 }}>
+      <Breadcrumbs
+        items={[
+          { label: 'Home', href: '/' },
+          { label: 'Profile' },
+        ]}
+      />
+
+      {/* Header */}
+      <Box display="flex" justifyContent="space-between" alignItems="center" mb={4} flexWrap="wrap" gap={2}>
+        <Box display="flex" alignItems="center" gap={2}>
+          <Avatar
+            sx={{
+              width: 64,
+              height: 64,
+              bgcolor: 'primary.main',
+              fontSize: '2rem',
+            }}
           >
-            Logout
-          </Button>
-        </Box>
-
-        {/* Quick Actions */}
-        <Grid container spacing={3} mb={4}>
-          <Grid item xs={12} md={6}>
-            <Card sx={{ height: '100%', cursor: 'pointer' }} onClick={handleGoToTrade}>
-              <CardContent>
-                <Box display="flex" alignItems="center" gap={2}>
-                  <TrendingUp sx={{ fontSize: 40, color: 'primary.main' }} />
-                  <Box>
-                    <Typography variant="h6">Bond Calculator</Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      Calculate bond analytics and perform trade analysis
-                    </Typography>
-                  </Box>
-                </Box>
-              </CardContent>
-            </Card>
-          </Grid>
-          <Grid item xs={12} md={6}>
-            <Card sx={{ height: '100%', cursor: 'pointer' }} onClick={handleCreatePortfolio}>
-              <CardContent>
-                <Box display="flex" alignItems="center" gap={2}>
-                  <Add sx={{ fontSize: 40, color: 'success.main' }} />
-                  <Box>
-                    <Typography variant="h6">Create Portfolio</Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      Start a new bond portfolio
-                    </Typography>
-                  </Box>
-                </Box>
-              </CardContent>
-            </Card>
-          </Grid>
-        </Grid>
-
-        {/* Portfolios Section */}
-        <Box mb={4}>
-          <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-            <Typography variant="h5" component="h2">
-              My Portfolios
+            {userEmail?.[0]?.toUpperCase() || 'U'}
+          </Avatar>
+          <Box>
+            <Typography variant="h4" component="h1" fontWeight={600}>
+              My Profile
             </Typography>
-            <Button
-              variant="contained"
-              startIcon={<Add />}
+            <Typography variant="body1" color="text.secondary">
+              {userEmail}
+            </Typography>
+          </Box>
+        </Box>
+        <Button
+          variant="outlined"
+          color="error"
+          startIcon={<Logout />}
+          onClick={handleLogout}
+        >
+          Logout
+        </Button>
+      </Box>
+
+      {/* Quick Actions */}
+      <Section title="Quick Actions">
+        <Grid container spacing={3}>
+          <Grid item xs={12} md={6}>
+            <Paper
+              elevation={0}
+              sx={{
+                p: 3,
+                border: (theme) => `1px solid ${theme.palette.divider}`,
+                borderRadius: 2,
+                cursor: 'pointer',
+                transition: 'all 0.3s ease',
+                '&:hover': {
+                  transform: 'translateY(-2px)',
+                  boxShadow: (theme) => theme.palette.mode === 'light'
+                    ? '0 8px 16px rgba(0,0,0,0.1)'
+                    : '0 8px 16px rgba(0,0,0,0.4)',
+                  borderColor: 'primary.main',
+                },
+              }}
+              onClick={handleGoToTrade}
+            >
+              <Box display="flex" alignItems="center" gap={2}>
+                <Box
+                  sx={{
+                    p: 1.5,
+                    borderRadius: 2,
+                    bgcolor: (theme) =>
+                      theme.palette.mode === 'light'
+                        ? 'primary.50'
+                        : 'primary.900',
+                    color: 'primary.main',
+                  }}
+                >
+                  <TrendingUp sx={{ fontSize: 32 }} />
+                </Box>
+                <Box>
+                  <Typography variant="h6" fontWeight={600}>
+                    Bond Calculator
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    Calculate bond analytics and perform trade analysis
+                  </Typography>
+                </Box>
+              </Box>
+            </Paper>
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <Paper
+              elevation={0}
+              sx={{
+                p: 3,
+                border: (theme) => `1px solid ${theme.palette.divider}`,
+                borderRadius: 2,
+                cursor: 'pointer',
+                transition: 'all 0.3s ease',
+                '&:hover': {
+                  transform: 'translateY(-2px)',
+                  boxShadow: (theme) => theme.palette.mode === 'light'
+                    ? '0 8px 16px rgba(0,0,0,0.1)'
+                    : '0 8px 16px rgba(0,0,0,0.4)',
+                  borderColor: 'success.main',
+                },
+              }}
               onClick={handleCreatePortfolio}
             >
-              New Portfolio
-            </Button>
-          </Box>
+              <Box display="flex" alignItems="center" gap={2}>
+                <Box
+                  sx={{
+                    p: 1.5,
+                    borderRadius: 2,
+                    bgcolor: (theme) =>
+                      theme.palette.mode === 'light'
+                        ? 'success.50'
+                        : 'success.900',
+                    color: 'success.main',
+                  }}
+                >
+                  <Add sx={{ fontSize: 32 }} />
+                </Box>
+                <Box>
+                  <Typography variant="h6" fontWeight={600}>
+                    Create Portfolio
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    Start a new bond portfolio
+                  </Typography>
+                </Box>
+              </Box>
+            </Paper>
+          </Grid>
+        </Grid>
+      </Section>
 
-          {portfolios.length === 0 ? (
-            <Card>
-              <CardContent>
-                <Typography variant="body1" color="text.secondary" textAlign="center" py={4}>
-                  You don't have any portfolios yet. Create your first portfolio to get started!
-                </Typography>
-              </CardContent>
-            </Card>
-          ) : (
-            <Grid container spacing={3}>
-              {portfolios.map((portfolio) => (
-                <Grid item xs={12} md={6} key={portfolio.id}>
-                  <Card
-                    sx={{
-                      cursor: 'pointer',
-                      '&:hover': {
-                        boxShadow: 6,
-                      },
-                    }}
-                    onClick={() => handleViewPortfolio(portfolio.id)}
-                  >
-                    <CardContent>
-                      <Typography variant="h6" gutterBottom>
-                        {portfolio.fullName}
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary" gutterBottom>
-                        {portfolio.abbrevName}
-                      </Typography>
-                      {portfolio.strategy && (
-                        <Typography variant="body2" color="primary">
-                          Strategy: {portfolio.strategy}
-                        </Typography>
-                      )}
-                      <Typography variant="caption" color="text.secondary" display="block" mt={1}>
-                        Created: {new Date(portfolio.createdAt).toLocaleDateString()}
-                      </Typography>
-                    </CardContent>
-                  </Card>
-                </Grid>
-              ))}
-            </Grid>
-          )}
-        </Box>
-      </Container>
-    </Layout>
+      {/* Portfolios Section */}
+      <Section
+        title="My Portfolios"
+        subtitle={`You have ${portfolios.length} portfolio${portfolios.length !== 1 ? 's' : ''}`}
+        action={
+          <Button
+            variant="contained"
+            startIcon={<Add />}
+            onClick={handleCreatePortfolio}
+          >
+            New Portfolio
+          </Button>
+        }
+      >
+        {portfolios.length === 0 ? (
+          <EmptyState
+            icon={<FolderOpen sx={{ fontSize: 64 }} />}
+            title="No portfolios yet"
+            description="Create your first portfolio to start managing your bond investments"
+            action={{
+              label: 'Create Portfolio',
+              onClick: handleCreatePortfolio,
+            }}
+          />
+        ) : (
+          <Grid container spacing={3}>
+            {portfolios.map((portfolio) => (
+              <Grid item xs={12} md={6} lg={4} key={portfolio.id}>
+                <Card
+                  sx={{
+                    cursor: 'pointer',
+                    height: '100%',
+                    transition: 'all 0.3s ease',
+                    '&:hover': {
+                      transform: 'translateY(-4px)',
+                    },
+                  }}
+                  onClick={() => handleViewPortfolio(portfolio.id)}
+                >
+                  <Box>
+                    <Typography variant="h6" gutterBottom fontWeight={600}>
+                      {portfolio.fullName}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary" gutterBottom>
+                      {portfolio.abbrevName}
+                    </Typography>
+                    {portfolio.strategy && (
+                      <Chip
+                        label={portfolio.strategy}
+                        size="small"
+                        color="primary"
+                        sx={{ mt: 1 }}
+                      />
+                    )}
+                    <Typography variant="caption" color="text.secondary" display="block" mt={2}>
+                      Created: {new Date(portfolio.createdAt).toLocaleDateString()}
+                    </Typography>
+                  </Box>
+                </Card>
+              </Grid>
+            ))}
+          </Grid>
+        )}
+      </Section>
+    </Container>
   );
 };
 

@@ -1,22 +1,104 @@
-body {
+* {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: Roboto;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Light mode variables */
+:root.light {
+  --bg-primary: #FFFFFF;
+  --bg-secondary: #F8F9FA;
+  --bg-tertiary: #F1F3F5;
+  --text-primary: #212529;
+  --text-secondary: #495057;
+  --text-tertiary: #6C757D;
+  --border-color: #E9ECEF;
+  --shadow: rgba(0, 0, 0, 0.1);
+}
+
+/* Dark mode variables */
+:root.dark {
+  --bg-primary: #1A1D23;
+  --bg-secondary: #22252B;
+  --bg-tertiary: #2A2D35;
+  --text-primary: #E9ECEF;
+  --text-secondary: #CED4DA;
+  --text-tertiary: #ADB5BD;
+  --border-color: #32353D;
+  --shadow: rgba(0, 0, 0, 0.4);
+}
+
+/* Default to light mode */
+:root {
+  --bg-primary: #FFFFFF;
+  --bg-secondary: #F8F9FA;
+  --bg-tertiary: #F1F3F5;
+  --text-primary: #212529;
+  --text-secondary: #495057;
+  --text-tertiary: #6C757D;
+  --border-color: #E9ECEF;
+  --shadow: rgba(0, 0, 0, 0.1);
 }
 
 a {
   text-decoration: none;
-  color: #000;
+  color: inherit;
   cursor: pointer;
+  transition: color 0.2s ease;
 }
 
-:root {
-  --text-black: rgba(0, 0, 0, 0.87);
-  --text-grey: rgba(0, 0, 0, 0.56);
-  --text-grey-100: rgba(0, 0, 0, 0.6);
-  --white: #fff;
-  --sky-blue: #2196f3;
-  --skyblue-100: #1e88e5;
-  --grey-100: #eaecf0;
+a:hover {
+  color: #4A90E2;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-tertiary);
+}
+
+/* Focus styles */
+*:focus-visible {
+  outline: 2px solid #4A90E2;
+  outline-offset: 2px;
+}
+
+/* Selection styles */
+::selection {
+  background-color: #4A90E2;
+  color: white;
+}
+
+/* Smooth transitions for theme changes */
+body,
+body * {
+  transition-property: background-color, border-color, color;
+  transition-duration: 0.2s;
+  transition-timing-function: ease;
 }

@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import Layout from '@/components/ui/Layout/Layout';
 import portfolioService, { Portfolio, Holding } from '@/services/portfolio.service';
 import {
   Box,
@@ -64,8 +63,8 @@ const PortfolioDetail = () => {
     try {
       await portfolioService.addHolding(id as string, {
         isin: newHolding.isin,
-        amount: parseFloat(newHolding.amount),
-        price: parseFloat(newHolding.price),
+        amount: Number.parseFloat(newHolding.amount),
+        price: Number.parseFloat(newHolding.price),
         holdDate: newHolding.holdDate,
       });
       setOpenDialog(false);
@@ -92,31 +91,73 @@ const PortfolioDetail = () => {
     }
   };
 
+  const handleCsvUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    try {
+      const text = await file.text();
+      const lines = text.split('\n').filter(line => line.trim());
+      
+      // Skip header row
+      const dataLines = lines.slice(1);
+      
+      let successCount = 0;
+      let errorCount = 0;
+
+      for (const line of dataLines) {
+        const [isin, portfolio, faceAmt, settlePrc] = line.split(',').map(s => s.trim());
+        
+        if (!isin || !faceAmt || !settlePrc) {
+          errorCount++;
+          continue;
+        }
+
+        try {
+          await portfolioService.addHolding(id as string, {
+            isin,
+            amount: Number.parseFloat(faceAmt),
+            price: Number.parseFloat(settlePrc),
+            holdDate: new Date().toISOString().split('T')[0],
+          });
+          successCount++;
+        } catch (error) {
+          console.error(`Error adding holding ${isin}:`, error);
+          errorCount++;
+        }
+      }
+
+      alert(`Import complete!\nSuccess: ${successCount}\nErrors: ${errorCount}`);
+      loadPortfolio();
+    } catch (error) {
+      console.error('Error reading CSV:', error);
+      alert('Failed to read CSV file');
+    }
+
+    // Reset input
+    event.target.value = '';
+  };
+
   if (loading) {
     return (
-      <Layout>
-        <Box display="flex" justifyContent="center" alignItems="center" minHeight="80vh">
-          <CircularProgress />
-        </Box>
-      </Layout>
+      <Box display="flex" justifyContent="center" alignItems="center" minHeight="80vh">
+        <CircularProgress />
+      </Box>
     );
   }
 
   if (!portfolio) {
     return (
-      <Layout>
-        <Container>
-          <Typography>Portfolio not found</Typography>
-        </Container>
-      </Layout>
+      <Container>
+        <Typography>Portfolio not found</Typography>
+      </Container>
     );
   }
 
   const totalValue = holdings.reduce((sum, h) => sum + (h.amount * h.price), 0);
 
   return (
-    <Layout>
-      <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+    <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
         <Button
           startIcon={<ArrowBack />}
           onClick={() => router.push('/profile')}
@@ -146,13 +187,28 @@ const PortfolioDetail = () => {
 
         <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
           <Typography variant="h5">Holdings</Typography>
-          <Button
-            variant="contained"
-            startIcon={<Add />}
-            onClick={() => setOpenDialog(true)}
-          >
-            Add Holding
-          </Button>
+          <Box display="flex" gap={2}>
+            <Button
+              variant="outlined"
+              component="label"
+              startIcon={<Add />}
+            >
+              Import CSV
+              <input
+                type="file"
+                hidden
+                accept=".csv"
+                onChange={handleCsvUpload}
+              />
+            </Button>
+            <Button
+              variant="contained"
+              startIcon={<Add />}
+              onClick={() => setOpenDialog(true)}
+            >
+              Add Holding
+            </Button>
+          </Box>
         </Box>
 
         <TableContainer component={Paper}>
@@ -248,7 +304,6 @@ const PortfolioDetail = () => {
           </DialogActions>
         </Dialog>
       </Container>
-    </Layout>
   );
 };
 

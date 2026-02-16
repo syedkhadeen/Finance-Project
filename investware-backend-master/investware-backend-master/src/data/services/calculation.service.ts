@@ -1,8 +1,9 @@
 import { Service } from 'typedi';
 import { TradeDTO } from '@data/dtos/trade/trade.dto';
-import { exec } from 'child_process';
-import { promisify } from 'util';
-import * as path from 'path';
+import { exec } from 'node:child_process';
+import { promisify } from 'node:util';
+import * as path from 'node:path';
+import * as fs from 'node:fs';
 
 const execAsync = promisify(exec);
 
@@ -99,27 +100,27 @@ export class CalculationService {
             analytics: {
                 principal: par,
                 accruedDays: accruedDays,
-                duration: parseFloat(duration.toFixed(3)),
-                convexity: parseFloat(convexity.toFixed(4)),
-                accrued: parseFloat(accrued.toFixed(2)),
+                duration: Number.parseFloat(duration.toFixed(3)),
+                convexity: Number.parseFloat(convexity.toFixed(4)),
+                accrued: Number.parseFloat(accrued.toFixed(2)),
                 price: price,
                 yieldToMaturity: yieldRate,
-                yieldToWorst: parseFloat((yieldRate * 0.95).toFixed(4)),
-                netPayment: parseFloat(netPayment.toFixed(2)),
-                maturityYears: parseFloat(yearsToMaturity.toFixed(2)),
+                yieldToWorst: Number.parseFloat((yieldRate * 0.95).toFixed(4)),
+                netPayment: Number.parseFloat(netPayment.toFixed(2)),
+                maturityYears: Number.parseFloat(yearsToMaturity.toFixed(2)),
                 lastPayment: maturityDate.toLocaleDateString('en-US'),
                 nextPayment: nextPaymentDate.toLocaleDateString('en-US'),
-                fairValue: parseFloat((par * 1.01).toFixed(2)),
-                zSpread: parseFloat((yieldRate * 0.5).toFixed(2)),
-                oasSpread: parseFloat((yieldRate * 0.5).toFixed(2)),
-                oasDuration: parseFloat(duration.toFixed(3)),
-                oasConvexity: parseFloat(convexity.toFixed(4)),
-                futureValue: parseFloat((par * 1.24).toFixed(2)),
-                currentValue: parseFloat((par * 1.32).toFixed(2)),
+                fairValue: Number.parseFloat((par * 1.01).toFixed(2)),
+                zSpread: Number.parseFloat((yieldRate * 0.5).toFixed(2)),
+                oasSpread: Number.parseFloat((yieldRate * 0.5).toFixed(2)),
+                oasDuration: Number.parseFloat(duration.toFixed(3)),
+                oasConvexity: Number.parseFloat(convexity.toFixed(4)),
+                futureValue: Number.parseFloat((par * 1.24).toFixed(2)),
+                currentValue: Number.parseFloat((par * 1.32).toFixed(2)),
                 futureDate: '9/1/2022',
-                futureReturn: parseFloat((yieldRate * 0.9).toFixed(2)),
-                upsideFutureReturn: parseFloat((yieldRate * 0.82).toFixed(2)),
-                downsideReturn: parseFloat((yieldRate * 1.06).toFixed(2)),
+                futureReturn: Number.parseFloat((yieldRate * 0.9).toFixed(2)),
+                upsideFutureReturn: Number.parseFloat((yieldRate * 0.82).toFixed(2)),
+                downsideReturn: Number.parseFloat((yieldRate * 1.06).toFixed(2)),
                 generatedCash: 0,
                 pnlCarry: 0,
                 pnlRoll: 0,
@@ -148,18 +149,43 @@ export class CalculationService {
         const javaInput: any = {
             DESCR: data.securityDescription || data.desc || 'Bond',
             CUSIP: data.cusip || '',
-            CPNRT: data.coupon || data.cpnrt || 3.5,
+            CPNRT: Number.parseFloat(data.coupon || data.cpnrt || '3.5'),
             DTMATURITY: formatDate(data.maturityDate || data.dtMaturity),
             DTSETTLE: formatDate(data.settleDate || data.dtSettle || new Date()),
-            FACEAMT: data.par || data.parAmt || 100000,
-            SETTLEPRC: data.price || data.settlePrc || 100,
+            FACEAMT: Number.parseFloat(data.par || data.parAmt || '100000'),
+            SETTLEPRC: Number.parseFloat(data.price || data.settlePrc || '100'),
             INTPERIODICITY: 2,
             INSTYPE: 'FIXEDRATE',
             CALCREQUEST: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
         };
 
         if (data.issuer) javaInput.ISSUER = data.issuer;
-        if (data.sector) javaInput.SECTOR = data.sector;
+        
+        // Note: The following parameters are NOT supported by Java BasisPoint:
+        // - SECTOR
+        // - FORECASTDATE
+        // - FORECASTDISCOUNTCURVE
+        // - FORECASTFIXINGCURVE
+        // - CUSTOMDISCOUNTCURVE
+        // - CUSTOMFIXINGCURVE
+        // These are logged for reference but not sent to Java
+
+        // Log forecast parameters for debugging (but don't send to Java)
+        if (data.forecastDate) {
+            console.log('[Java BasisPoint] Note: Forecast date provided but not supported by Java:', formatDate(data.forecastDate));
+        }
+        if (data.forecastDiscountCurve) {
+            console.log('[Java BasisPoint] Note: Forecast discount curve provided but not supported by Java:', data.forecastDiscountCurve);
+        }
+        if (data.forecastFixingCurve) {
+            console.log('[Java BasisPoint] Note: Forecast fixing curve provided but not supported by Java:', data.forecastFixingCurve);
+        }
+        if (data.customDiscountCurve) {
+            console.log('[Java BasisPoint] Note: Custom discount curve provided but not supported by Java:', data.customDiscountCurve.name);
+        }
+        if (data.customFixingCurve) {
+            console.log('[Java BasisPoint] Note: Custom fixing curve provided but not supported by Java:', data.customFixingCurve.name);
+        }
 
         return javaInput;
     }
@@ -168,65 +194,129 @@ export class CalculationService {
      * Execute Java BasisPoint process
      */
     private async callJavaBasisPoint(input: any): Promise<string> {
-        const basisPointPath = path.resolve(__dirname, '../../../../../basisPoint-main/basisPoint-main');
+        // Navigate up from backend directory to project root, then to basisPoint
+        const basisPointPath = path.resolve(process.cwd(), '../../basisPoint-main/basisPoint-main');
         const jsonInput = JSON.stringify(input);
+        
+        console.log('[Java BasisPoint] Attempting to call Java...');
+        console.log('[Java BasisPoint] Path:', basisPointPath);
+        console.log('[Java BasisPoint] Current working directory:', process.cwd());
         
         try {
             await execAsync('java -version');
+            console.log('[Java BasisPoint] Java is installed');
         } catch {
             throw new Error('Java not installed');
         }
         
-        const fs = require('fs');
         const inputFile = path.join(basisPointPath, 'input.json');
-        fs.writeFileSync(inputFile, jsonInput);
-        
-        const runCmd = `cd "${basisPointPath}" && java -cp ".;gson-2.11.0.jar" RunFromFile`;
-        const { stdout } = await execAsync(runCmd, { timeout: 10000 });
         
         try {
-            fs.unlinkSync(inputFile);
-        } catch {}
+            fs.writeFileSync(inputFile, jsonInput);
+            console.log('[Java BasisPoint] Input file created');
+            console.log('[Java BasisPoint] Input JSON (first 300 chars):', jsonInput.substring(0, 300));
+        } catch (error) {
+            console.error('[Java BasisPoint] Failed to write input file:', error.message);
+            throw new Error('Failed to write input file: ' + error.message);
+        }
         
-        return stdout.trim();
+        const runCmd = `cd "${basisPointPath}" && java -cp ".;gson-2.11.0.jar" RunFromFile`;
+        console.log('[Java BasisPoint] Executing:', runCmd);
+        
+        try {
+            const { stdout, stderr } = await execAsync(runCmd, { timeout: 10000 });
+            console.log('[Java BasisPoint] ✅ Execution successful');
+            console.log('[Java BasisPoint] Raw stdout length:', stdout.length);
+            console.log('[Java BasisPoint] Raw stdout (first 200 chars):', stdout.substring(0, 200));
+            
+            if (stderr) {
+                console.warn('[Java BasisPoint] stderr:', stderr);
+            }
+            
+            try {
+                fs.unlinkSync(inputFile);
+            } catch {}
+            
+            // Clean the output - remove any non-JSON content
+            const trimmedOutput = stdout.trim();
+            
+            // Try to find JSON in the output (it might have extra text before/after)
+            let jsonOutput = trimmedOutput;
+            
+            // Check if it's an error response (missing opening brace)
+            if (trimmedOutput.startsWith('"Error"')) {
+                jsonOutput = '{' + trimmedOutput + '}';
+                console.log('[Java BasisPoint] Fixed malformed error JSON');
+            }
+            // If output starts with non-JSON characters, try to find the JSON part
+            else if (!trimmedOutput.startsWith('{') && !trimmedOutput.startsWith('[')) {
+                const jsonStart = trimmedOutput.indexOf('{');
+                if (jsonStart !== -1) {
+                    jsonOutput = trimmedOutput.substring(jsonStart);
+                    console.log('[Java BasisPoint] Extracted JSON from position:', jsonStart);
+                }
+            }
+            
+            return jsonOutput;
+        } catch (execError) {
+            console.error('[Java BasisPoint] Execution failed:', execError.message);
+            try {
+                fs.unlinkSync(inputFile);
+            } catch {}
+            throw execError;
+        }
     }
 
     /**
      * Parse Java BasisPoint output
      */
     private parseJavaOutput(javaOutput: string): any {
-        const result = JSON.parse(javaOutput);
-        
-        return {
-            analytics: {
-                principal: result.FACEAMT || 0,
-                accrued: result.ACCRUEDINT || 0,
-                price: result.SETTLEPRC || 0,
-                yieldToMaturity: result.YIELDTOMATURITY || 0,
-                yieldToWorst: result.YIELDWORST || 0,
-                duration: result.MODIFIEDDURATION || 0,
-                convexity: result.CONVEXITY || 0,
-                netPayment: result.NETPAYMENT || 0,
-                maturityYears: result.MATLENYEARS || 0,
-                oasSpread: result.OASSPREAD || 0,
-                oasDuration: result.OASDURATION || 0,
-                oasConvexity: result.OASCONVEXITY || 0,
-                fairValue: result.FAIRVALUE || 0,
-                zSpread: result.ZSPREAD || 0,
-                generatedCash: 0,
-                pnlCarry: 0,
-                pnlRoll: 0,
-                pnlFinance: 0,
-                futureReturn: 0,
-                upsideFutureReturn: 0,
-                downsideReturn: 0,
-                dv01Parallel: 0,
-                dv01_2x5s: 0,
-                dv01_5s10s: 0
-            },
-            cashflow: this.parseCashflow(result.CASHFLOW || []),
-            keyRateDuration: this.parseKeyRateDuration(result.KEYRATEDURATION || [])
-        };
+        try {
+            const result = JSON.parse(javaOutput);
+            
+            // Check if Java returned an error
+            if (result.Error) {
+                console.error('[Java BasisPoint] Java returned error:', result.Error);
+                throw new Error('Java BasisPoint error: ' + result.Error);
+            }
+            
+            console.log('[Java BasisPoint] Successfully parsed JSON output');
+            
+            return {
+                analytics: {
+                    principal: result.FACEAMT || 0,
+                    accrued: result.ACCRUEDINT || 0,
+                    price: result.SETTLEPRC || 0,
+                    yieldToMaturity: result.YIELDTOMATURITY || 0,
+                    yieldToWorst: result.YIELDWORST || 0,
+                    duration: result.MODIFIEDDURATION || 0,
+                    convexity: result.CONVEXITY || 0,
+                    netPayment: result.NETPAYMENT || 0,
+                    maturityYears: result.MATLENYEARS || 0,
+                    oasSpread: result.OASSPREAD || 0,
+                    oasDuration: result.OASDURATION || 0,
+                    oasConvexity: result.OASCONVEXITY || 0,
+                    fairValue: result.FAIRVALUE || 0,
+                    zSpread: result.ZSPREAD || 0,
+                    generatedCash: 0,
+                    pnlCarry: 0,
+                    pnlRoll: 0,
+                    pnlFinance: 0,
+                    futureReturn: 0,
+                    upsideFutureReturn: 0,
+                    downsideReturn: 0,
+                    dv01Parallel: 0,
+                    dv01_2x5s: 0,
+                    dv01_5s10s: 0
+                },
+                cashflow: this.parseCashflow(result.CASHFLOW || []),
+                keyRateDuration: this.parseKeyRateDuration(result.KEYRATEDURATION || [])
+            };
+        } catch (parseError) {
+            console.error('[Java BasisPoint] JSON parse error:', parseError.message);
+            console.error('[Java BasisPoint] Failed to parse output:', javaOutput.substring(0, 500));
+            throw parseError;
+        }
     }
 
     private parseCashflow(cashflowData: any[]): any[] {

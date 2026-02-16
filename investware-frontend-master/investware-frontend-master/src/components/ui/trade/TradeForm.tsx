@@ -94,8 +94,10 @@ const CustomCurveModal = ({ open, onClose, onSave, initialPoints = [] }: CustomC
 
   return (
     <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
-      <DialogTitle>Define Custom Curve</DialogTitle>
-      <DialogContent dividers>
+      <DialogTitle sx={{ backgroundColor: 'background.paper', color: 'text.primary' }}>
+        Define Custom Curve
+      </DialogTitle>
+      <DialogContent dividers sx={{ backgroundColor: 'background.default' }}>
         <Stack spacing={3} sx={{ mt: 1 }}>
           <TextField
             label="Curve Name"
@@ -175,22 +177,29 @@ const CustomCurveModal = ({ open, onClose, onSave, initialPoints = [] }: CustomC
 
           {points.length > 0 && (
             <Box>
-              <Typography variant="subtitle2" gutterBottom>
+              <Typography variant="subtitle2" gutterBottom color="text.primary">
                 Added Points ({points.length})
               </Typography>
-              <TableContainer component={Paper} variant="outlined" sx={{ maxHeight: 320 }}>
+              <TableContainer 
+                component={Paper} 
+                variant="outlined" 
+                sx={{ 
+                  maxHeight: 320,
+                  backgroundColor: 'background.paper'
+                }}
+              >
                 <Table size="small" stickyHeader>
                   <TableHead>
                     <TableRow>
-                      <TableCell>Tenor</TableCell>
-                      <TableCell align="right">Rate %</TableCell>
-                      <TableCell align="right">StdDev %</TableCell>
-                      <TableCell align="center" width={60}></TableCell>
+                      <TableCell sx={{ backgroundColor: 'background.default' }}>Tenor</TableCell>
+                      <TableCell align="right" sx={{ backgroundColor: 'background.default' }}>Rate %</TableCell>
+                      <TableCell align="right" sx={{ backgroundColor: 'background.default' }}>StdDev %</TableCell>
+                      <TableCell align="center" width={60} sx={{ backgroundColor: 'background.default' }}></TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
                     {points.map((point, idx) => (
-                      <TableRow key={idx}>
+                      <TableRow key={idx} hover>
                         <TableCell>{point.tenor}</TableCell>
                         <TableCell align="right">{point.rate}</TableCell>
                         <TableCell align="right">{point.stdDev}</TableCell>
@@ -208,7 +217,7 @@ const CustomCurveModal = ({ open, onClose, onSave, initialPoints = [] }: CustomC
           )}
         </Stack>
       </DialogContent>
-      <DialogActions>
+      <DialogActions sx={{ backgroundColor: 'background.paper' }}>
         <Button onClick={onClose}>Cancel</Button>
         <Button
           variant="contained"
@@ -352,9 +361,19 @@ const TradeForm = () => {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <Paper elevation={3} sx={{ p: 4, maxWidth: 1400, mx: 'auto', mt: 4 }}>
+      <Paper 
+        elevation={3} 
+        sx={{ 
+          p: 4, 
+          maxWidth: 1400, 
+          mx: 'auto', 
+          mt: 4,
+          backgroundColor: 'background.paper',
+          backgroundImage: 'none'
+        }}
+      >
         <Stack direction="row" justifyContent="space-between" alignItems="center" mb={3}>
-          <Typography variant="h5" fontWeight="bold">
+          <Typography variant="h5" fontWeight="bold" color="text.primary">
             Trade
           </Typography>
           <Stack direction="row" spacing={2}>
@@ -390,7 +409,16 @@ const TradeForm = () => {
         <Divider sx={{ mb: 4 }} />
 
         {/* Security Section */}
-        <Box sx={{ mb: 4 }}>
+        <Box 
+          sx={{ 
+            mb: 4, 
+            p: 3, 
+            borderRadius: 2,
+            backgroundColor: 'background.default',
+            border: '1px solid',
+            borderColor: 'divider'
+          }}
+        >
           <Typography variant="h6" fontWeight="bold" sx={{ mb: 2, color: 'primary.main' }}>
             Security
           </Typography>
@@ -465,7 +493,16 @@ const TradeForm = () => {
         </Box>
 
         {/* Trade Details Section */}
-        <Box sx={{ mb: 4 }}>
+        <Box 
+          sx={{ 
+            mb: 4, 
+            p: 3, 
+            borderRadius: 2,
+            backgroundColor: 'background.default',
+            border: '1px solid',
+            borderColor: 'divider'
+          }}
+        >
           <Typography variant="h6" fontWeight="bold" sx={{ mb: 2, color: 'primary.main' }}>
             Trade Details
           </Typography>
@@ -508,7 +545,16 @@ const TradeForm = () => {
         </Box>
 
         {/* Forecast Section */}
-        <Box sx={{ mb: 4 }}>
+        <Box 
+          sx={{ 
+            mb: 4, 
+            p: 3, 
+            borderRadius: 2,
+            backgroundColor: 'background.default',
+            border: '1px solid',
+            borderColor: 'divider'
+          }}
+        >
           <Typography variant="h6" fontWeight="bold" sx={{ mb: 2, color: 'primary.main' }}>
             Forecast
           </Typography>
