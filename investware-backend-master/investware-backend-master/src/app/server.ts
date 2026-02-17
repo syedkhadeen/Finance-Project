@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import { App } from './app';
 import { ValidateEnv } from '@infrastructure/common/validateEnv';
 import { AuthController } from '@infrastructure/controllers/auth.controller';
