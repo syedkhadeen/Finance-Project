@@ -1,0 +1,16 @@
+to run backend:
+
+npm run dev
+http://localhost:3002/api-docs
+
+
+to run database:
+
+npx prisma studio
+http://localhost:5555
+
+
+to run frontend:
+
+npm run dev
+http://localhost:3001
