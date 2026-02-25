@@ -9,6 +9,10 @@ export class SignupDto {
   @IsNotEmpty()
   email: string;
 
+  @IsNotEmpty()
+  @IsString()
+  password: string;
+
   @IsString()
   @IsOptional()
   firstName?: string;
