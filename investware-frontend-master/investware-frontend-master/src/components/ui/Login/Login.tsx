@@ -66,7 +66,7 @@ const Login = () => {
         localStorage.setItem('token', response.data.data.idToken);
         toast.success('Login successful!');
         // Use window.location for a hard redirect
-        window.location.href = '/profile';
+        window.location.href = '/';
       } else {
         toast.error('Invalid response from server');
       }
@@ -150,7 +150,7 @@ const Login = () => {
           <CustomButton
             onClick={handleSubmit}
             disabled={loading}
-            text={loading ? 'Checking...' : COMMON_MESSAGES.SIGN_IN}
+            text="Log in"
             sx={{
               marginTop: '2.06rem',
               backgroundColor: 'var(--sky-blue)',

@@ -11,37 +11,26 @@ import authService from '@/services/auth.service';
 export default function Home() {
   const router = useRouter();
 
-  useEffect(() => {
-    // Redirect to profile if already logged in
-    if (authService.isAuthenticated()) {
-      router.push('/profile');
-    }
-  }, [router]);
-
   const features = [
     {
       icon: <ShowChartIcon sx={{ fontSize: 48 }} />,
       title: 'Bond Trading',
       description: 'Execute trades with real-time pricing and comprehensive analytics',
-      action: () => router.push('/trade'),
     },
     {
       icon: <AccountBalanceWalletIcon sx={{ fontSize: 48 }} />,
       title: 'Portfolio Management',
       description: 'Track and manage your bond portfolios with detailed insights',
-      action: () => router.push('/portfolios/create'),
     },
     {
       icon: <TrendingUpIcon sx={{ fontSize: 48 }} />,
       title: 'Advanced Analytics',
       description: 'Yield curves, duration, convexity, and key rate analysis',
-      action: () => router.push('/trade'),
     },
     {
       icon: <SecurityIcon sx={{ fontSize: 48 }} />,
       title: 'Secure & Reliable',
       description: 'Enterprise-grade security with professional calculation engine',
-      action: () => router.push('/profile'),
     },
   ];
 
@@ -99,14 +88,6 @@ export default function Home() {
             >
               Start Trading
             </Button>
-            <Button
-              variant="outlined"
-              size="large"
-              onClick={() => router.push('/login')}
-              sx={{ px: 4, py: 1.5 }}
-            >
-              Sign In
-            </Button>
           </Box>
         </Box>
 
@@ -127,17 +108,7 @@ export default function Home() {
                     border: (theme) => `1px solid ${theme.palette.divider}`,
                     borderRadius: 2,
                     transition: 'all 0.3s ease',
-                    cursor: 'pointer',
-                    '&:hover': {
-                      transform: 'translateY(-4px)',
-                      boxShadow: (theme) =>
-                        theme.palette.mode === 'light'
-                          ? '0 12px 24px rgba(0,0,0,0.1)'
-                          : '0 12px 24px rgba(0,0,0,0.4)',
-                      borderColor: 'primary.main',
-                    },
                   }}
-                  onClick={feature.action}
                 >
                   <Box
                     sx={{
@@ -196,29 +167,6 @@ export default function Home() {
             </Grid>
           </Card>
         </Section>
-
-        {/* CTA Section */}
-        <Box
-          sx={{
-            py: 8,
-            textAlign: 'center',
-          }}
-        >
-          <Typography variant="h4" gutterBottom fontWeight={600}>
-            Ready to get started?
-          </Typography>
-          <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
-            Join professionals who trust Investware for their bond trading needs
-          </Typography>
-          <Button
-            variant="contained"
-            size="large"
-            onClick={() => router.push('/sign-up')}
-            sx={{ px: 4, py: 1.5 }}
-          >
-            Create Account
-          </Button>
-        </Box>
       </Container>
     </Box>
   );

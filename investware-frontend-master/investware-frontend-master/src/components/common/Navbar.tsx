@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   AppBar,
   Toolbar,
@@ -36,12 +36,23 @@ const navItems: NavItem[] = [
   { label: 'Trade', href: '/trade' },
   { label: 'Portfolios', href: '/portfolios/create' },
   { label: 'Profile', href: '/profile' },
+  { label: 'Subscription', href: '/subscription' },
 ];
 
 export const Navbar: React.FC = () => {
   const router = useRouter();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+
+  // ── NEW: Use state + effect pattern ──
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // safe default (server + initial client render)
+
+  useEffect(() => {
+    // Only runs in browser, after hydration
+    const token = localStorage.getItem('token');
+    setIsLoggedIn(!!token);
+  }, []); // empty deps = run once after mount
+
   const [mobileOpen, setMobileOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
@@ -63,8 +74,8 @@ export const Navbar: React.FC = () => {
   };
 
   const handleLogout = () => {
-    // Add logout logic here
     localStorage.removeItem('token');
+    setIsLoggedIn(false);           // ← optional: instant UI update
     router.push('/login');
     handleMenuClose();
   };
@@ -86,24 +97,27 @@ export const Navbar: React.FC = () => {
         </Typography>
       </Box>
       <List>
-        {navItems.map((item) => (
-          <ListItem key={item.label} disablePadding>
-            <ListItemButton
-              onClick={() => handleNavigation(item.href)}
-              selected={router.pathname === item.href}
-              sx={{
-                '&.Mui-selected': {
-                  backgroundColor: theme.palette.action.selected,
-                  '&:hover': {
-                    backgroundColor: theme.palette.action.hover,
+        {navItems.map((item) => {
+          if (item.label === 'Profile' && !isLoggedIn) return null;
+          return (
+            <ListItem key={item.label} disablePadding>
+              <ListItemButton
+                onClick={() => handleNavigation(item.href)}
+                selected={router.pathname === item.href}
+                sx={{
+                  '&.Mui-selected': {
+                    backgroundColor: theme.palette.action.selected,
+                    '&:hover': {
+                      backgroundColor: theme.palette.action.hover,
+                    },
                   },
-                },
-              }}
-            >
-              <ListItemText primary={item.label} />
-            </ListItemButton>
-          </ListItem>
-        ))}
+                }}
+              >
+                <ListItemText primary={item.label} />
+              </ListItemButton>
+            </ListItem>
+          );
+        })}
       </List>
     </Box>
   );
@@ -164,53 +178,68 @@ export const Navbar: React.FC = () => {
             {/* Desktop navigation */}
             {!isMobile && (
               <Box sx={{ display: 'flex', gap: 1, ml: 4 }}>
-                {navItems.map((item) => (
-                  <Button
-                    key={item.label}
-                    onClick={() => handleNavigation(item.href)}
-                    sx={{
-                      color: 'text.primary',
-                      fontWeight: router.pathname === item.href ? 600 : 400,
-                      position: 'relative',
-                      '&::after': {
-                        content: '""',
-                        position: 'absolute',
-                        bottom: 0,
-                        left: '50%',
-                        transform: 'translateX(-50%)',
-                        width: router.pathname === item.href ? '80%' : '0%',
-                        height: '2px',
-                        backgroundColor: 'primary.main',
-                        transition: 'width 0.3s ease',
-                      },
-                      '&:hover::after': {
-                        width: '80%',
-                      },
-                    }}
-                  >
-                    {item.label}
-                  </Button>
-                ))}
+                {navItems.map((item) => {
+                  if (item.label === 'Profile' && !isLoggedIn) return null;
+                  return (
+                    <Button
+                      key={item.label}
+                      onClick={() => handleNavigation(item.href)}
+                      sx={{
+                        color: 'text.primary',
+                        fontWeight: router.pathname === item.href ? 600 : 400,
+                        position: 'relative',
+                        '&::after': {
+                          content: '""',
+                          position: 'absolute',
+                          bottom: 0,
+                          left: '50%',
+                          transform: 'translateX(-50%)',
+                          width: router.pathname === item.href ? '80%' : '0%',
+                          height: '2px',
+                          backgroundColor: 'primary.main',
+                          transition: 'width 0.3s ease',
+                        },
+                        '&:hover::after': {
+                          width: '80%',
+                        },
+                      }}
+                    >
+                      {item.label}
+                    </Button>
+                  );
+                })}
               </Box>
             )}
 
             <Box sx={{ flexGrow: 1 }} />
 
             {/* Right side actions */}
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
               <ThemeToggle />
-              <IconButton onClick={handleMenuOpen} sx={{ ml: 1 }}>
-                <Avatar
-                  sx={{
-                    width: 32,
-                    height: 32,
-                    bgcolor: 'primary.main',
-                    fontSize: '0.875rem',
-                  }}
+
+              {isLoggedIn ? (
+                <IconButton onClick={handleMenuOpen} sx={{ ml: 1 }}>
+                  <Avatar
+                    sx={{
+                      width: 32,
+                      height: 32,
+                      bgcolor: 'primary.main',
+                      fontSize: '0.875rem',
+                    }}
+                  >
+                    U
+                  </Avatar>
+                </IconButton>
+              ) : (
+                <Button
+                  variant="outlined"
+                  color="primary"
+                  size="small"
+                  onClick={() => router.push('/login')}
                 >
-                  U
-                </Avatar>
-              </IconButton>
+                  Log In
+                </Button>
+              )}
             </Box>
           </Toolbar>
         </Container>
@@ -222,7 +251,7 @@ export const Navbar: React.FC = () => {
         open={mobileOpen}
         onClose={handleDrawerToggle}
         ModalProps={{
-          keepMounted: true, // Better mobile performance
+          keepMounted: true,
         }}
         sx={{
           display: { xs: 'block', md: 'none' },
